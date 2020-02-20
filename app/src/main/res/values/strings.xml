@@ -15,4 +15,6 @@
 
     <string name="scanner__failure_message">Oof. Scanner failed!</string>
     <string name="scanner__instructions">Scan a barcode</string>
+
+    <string name="error">Unknown error occurred!</string>
 </resources>

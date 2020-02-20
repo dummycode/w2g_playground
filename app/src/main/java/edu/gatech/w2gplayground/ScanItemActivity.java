@@ -5,21 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
-import com.vuzix.sdk.barcode.ScanResult;
-
-import java.io.IOException;
 
 import edu.gatech.w2gplayground.Audio.Beep;
 import edu.gatech.w2gplayground.Permissions.Permissions;
@@ -134,8 +124,8 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     /**
      * Helper method to show a scan result
      *
-     * @param bitmap -  the bitmap in which barcodes were found
-     * @param result -  an array of ScanResult
+     * @param bitmap the bitmap in which barcodes were found
+     * @param result an array of ScanResult
      */
     private void showScanResult(Bitmap bitmap, ScanResult2 result) {
         scanInstructionsView.setVisibility(View.GONE);
@@ -164,6 +154,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
 
     /**
      * Utility to determine if the scanner result fragment is showing
+     *
      * @return True if showing
      */
     private boolean isScanResultShowing() {

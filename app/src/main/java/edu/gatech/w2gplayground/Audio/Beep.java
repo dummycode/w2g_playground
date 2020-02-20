@@ -33,6 +33,7 @@ public class Beep {
             player.setVolume(.1f, .1f);
             player.prepare();
             player.start();
+            player.release();
         } catch (IOException e) {
             player.release();
         }

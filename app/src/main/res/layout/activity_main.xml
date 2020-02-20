@@ -43,4 +43,13 @@
         android:nextFocusRight="@+id/login"
         android:text="@string/activity_main__scan_item_button_title" />
 
+    <TextView
+        android:id="@+id/listening_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="208dp"
+        android:layout_marginTop="100dp" />
+
 </RelativeLayout>
