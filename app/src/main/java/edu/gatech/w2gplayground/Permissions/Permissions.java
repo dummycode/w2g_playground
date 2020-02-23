@@ -74,9 +74,9 @@ public class Permissions extends Fragment {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (permissions.length == 1) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    permissionsGranted();  // Permission was just granted by the user.
+                    permissionsGranted();
                 } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                    requestPermissions();  // Ask for permission again
+                    requestPermissions();
                 } else {
                     // Permission was denied. Give the user a hint, and exit
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

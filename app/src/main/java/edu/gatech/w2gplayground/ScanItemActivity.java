@@ -3,7 +3,6 @@ package edu.gatech.w2gplayground;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -81,12 +80,10 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     private void showScanner() {
         try {
             ScannerFragment scannerFragment = new ScannerFragment();
+
             Bundle args = new Bundle();
-
             args.putBoolean(ScannerFragment.ARG_ZOOM_IN_MODE, true);
-
             scannerFragment.setArguments(args);
-
 
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, scannerFragment).commit();
             scannerFragment.setListener2(scannerListener);
