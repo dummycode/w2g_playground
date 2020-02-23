@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = new Bundle();
         extras.putString("name", "Mac n Cheese");
         extras.putInt("quantity", 2);
-        extras.putString("upc", "813267020007");
+        extras.putString("upc", "021000010875");
         intent.putExtras(extras);
 
         startActivity(intent);

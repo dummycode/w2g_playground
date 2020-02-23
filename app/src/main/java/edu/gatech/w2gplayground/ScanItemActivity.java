@@ -3,6 +3,7 @@ package edu.gatech.w2gplayground;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -41,7 +42,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            this.name = bundle.getString("item", "test");
+            this.name = bundle.getString("name", "test");
             this.upc = bundle.getString("upc", "001");
             this.quantity = bundle.getInt("quantity", 1);
         }
@@ -80,6 +81,13 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     private void showScanner() {
         try {
             ScannerFragment scannerFragment = new ScannerFragment();
+            Bundle args = new Bundle();
+
+            args.putBoolean(ScannerFragment.ARG_ZOOM_IN_MODE, true);
+
+            scannerFragment.setArguments(args);
+
+
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, scannerFragment).commit();
             scannerFragment.setListener2(scannerListener);
 
@@ -203,7 +211,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
             // All done!
             doneScanning();
         } else {
-            // Add listener back after one (1) second
+            // Add listener back after two (2) seconds
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -213,7 +221,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
 
                     resultIcon.setVisibility(View.GONE);
                 }
-            }, 1000);
+            }, 2000);
         }
     }
 
