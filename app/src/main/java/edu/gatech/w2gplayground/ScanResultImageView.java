@@ -78,11 +78,12 @@ public class ScanResultImageView extends AppCompatImageView {
             Drawable d = getDrawable();
             if (d instanceof BitmapDrawable) {
                 Bitmap b = ((BitmapDrawable)d).getBitmap();
-                float scale = (float)getWidth() / b.getWidth();
-                if(location!=null && location.length>1) {
+                float scale = (float) getWidth() / b.getWidth();
+                if (location!=null && location.length>1) {
                     for (int iIndex = 1; iIndex < location.length; iIndex++) {
                         drawLine(canvas, location[iIndex - 1], location[iIndex], scale);
                     }
+
                     drawLine(canvas, location[location.length - 1], location[0], scale);
                 }
             }

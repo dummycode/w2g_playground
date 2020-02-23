@@ -3,8 +3,10 @@
     <string name="activity_main__title">Ware2Go Playground</string>
     <string name="activity_main__login_button_title">Login</string>
     <string name="activity_main__scan_item_button_title">Scan Item</string>
+    <string name="activity_main__listening_status__not">Not listening</string>
+    <string name="activity_main__listening_status__yes">Listening…</string>
 
-    <string name="activity_scan_item__instructions">Please scan an item</string>
+    <string name="activity_scan_item__instructions">Please scan %d %s(s)</string>
     <string name="activity_scan_item__success_message">Barcode scanned!</string>
     <string name="activity_scan_item__failure_message">Barcode failed to scan…</string>
     <string name="activity_scan_item__image_description">Current View</string>
@@ -17,4 +19,6 @@
     <string name="scanner__instructions">Scan a barcode</string>
 
     <string name="error">Unknown error occurred!</string>
+
+    <string name="small_logo_content_description">Ware2Go Small Logo</string>
 </resources>

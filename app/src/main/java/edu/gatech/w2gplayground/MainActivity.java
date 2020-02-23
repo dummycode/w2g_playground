@@ -19,11 +19,10 @@ import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 import edu.gatech.w2gplayground.Voice.VoiceCommandReceiver;
 
 public class MainActivity extends AppCompatActivity {
-
-    public final String LOG_TAG = "MainActivity";
+    public final static String LOG_TAG = MainActivity.class.getSimpleName();
     public final String CUSTOM_SDK_INTENT = "com.vuzix.sample.vuzix_voicecontrolwithsdk.CustomIntent";
+
     VoiceCommandReceiver myVoiceCommandReceiver;
-    private boolean myRecognizerActive;
 
     TextView listeningStatus;
     Button scanButton, loginButton;
@@ -33,9 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Best practice to lock orientation once app has started
+        // According to Vuzix, best practice is to lock orientation once app has started
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-
 
         listeningStatus = findViewById(R.id.listening_status);
 
@@ -60,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
             // Create the voice command receiver class
             myVoiceCommandReceiver = new VoiceCommandReceiver(this);
 
-            // Now register another intent handler to demonstrate intents sent from the service
+            // Register another intent handler to demonstrate intents sent from the service
             myIntentReceiver = new MyIntentReceiver();
             registerReceiver(myIntentReceiver , new IntentFilter(CUSTOM_SDK_INTENT));
+        } catch (RuntimeException re) {
+            CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
         } catch (RemoteException re) {
             CustomToast.showTopToast(this, "Error initializing VuzixSpeechClient");
         }
@@ -73,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
      */
     protected void onScanItemClick() {
         Intent intent = new Intent(this, ScanItemActivity.class);
+
+        // Add extras
+        Bundle extras = new Bundle();
+        extras.putString("name", "Mac n Cheese");
+        extras.putInt("quantity", 2);
+        extras.putString("upc", "813267020007");
+        intent.putExtras(extras);
+
         startActivity(intent);
     }
 
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
      * Handler for "test" command
      */
     public void handleTestCommand() {
-        System.out.println("Test command received");
+        CustomToast.showTopToast(this, "Test command received at " + System.currentTimeMillis());
     }
 
     /**
@@ -111,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Utility to get the name of the current method for logging
+     *
      * @return String name of the current method
      */
     public String getMethodName() {
@@ -118,16 +127,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Update the button from "Listen" to "Stop" based on our cached state
+     * Update the text from "Listening..." to "Not listening" based on the state
      */
-    private void updateListeningStatusText() {
-        if (myRecognizerActive) {
-            listeningStatus.setText("Listening...");
+    private void updateListeningStatusText(boolean isRecognizerActive) {
+        if (isRecognizerActive) {
+            listeningStatus.setText(R.string.activity_main__listening_status__yes);
         } else {
-            listeningStatus.setText("Not listening");
+            listeningStatus.setText(R.string.activity_main__listening_status__not);
         }
-
-        System.out.println("Update Listen Button Text");
     }
 
     /**
@@ -135,14 +142,13 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param isRecognizerActive boolean - true when listening
      */
-    public void RecognizerChangeCallback(boolean isRecognizerActive) {
+    public void RecognizerChangeCallback(final boolean isRecognizerActive) {
         Log.d(LOG_TAG, getMethodName());
 
-        myRecognizerActive = isRecognizerActive;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updateListeningStatusText();
+                updateListeningStatusText(isRecognizerActive);
             }
         });
     }

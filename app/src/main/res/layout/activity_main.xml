@@ -50,6 +50,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="208dp"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="100dp"
+        android:text="@string/activity_main__listening_status__not" />
 
 </RelativeLayout>

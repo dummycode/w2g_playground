@@ -2,31 +2,49 @@ package edu.gatech.w2gplayground;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
 
 import edu.gatech.w2gplayground.Audio.Beep;
+import edu.gatech.w2gplayground.Fragments.ScanItem.ScanItemSuccessFragment;
 import edu.gatech.w2gplayground.Permissions.Permissions;
 
 import static edu.gatech.w2gplayground.R.layout.activity_scan_item;
 
 public class ScanItemActivity extends AppCompatActivity implements Permissions.Listener  {
 
+    private static final String LOG_TAG = ScanItemActivity.class.getSimpleName();
+
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
-    private View scanInstructionsView;
+    private TextView instructions;
     private ScannerFragment.Listener2 scannerListener;
+    private ImageView resultIcon;
+
+    private String name, upc;
+    private int quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(activity_scan_item);
+
+        // Handle passed in arguments
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            this.name = bundle.getString("item", "test");
+            this.upc = bundle.getString("upc", "001");
+            this.quantity = bundle.getInt("quantity", 1);
+        }
 
         Permissions permissionsFragment = (Permissions) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
         if (permissionsFragment == null) {
@@ -37,9 +55,19 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         permissionsFragment.setListener(this);
 
 
-        // Hide the instructions until we have permission granted
-        scanInstructionsView = findViewById(R.id.scan_instructions);
-        scanInstructionsView.setVisibility(View.GONE);
+        instructions = findViewById(R.id.scan_instructions);
+
+        // Set instructions
+        this.instructions.setText(String.format(
+                getString(R.string.activity_scan_item__instructions),
+                this.quantity, this.name
+        ));
+
+        // Hide instructions until we have permission
+        instructions.setVisibility(View.GONE);
+
+        this.resultIcon = findViewById(R.id.imageView2);
+        this.resultIcon.setVisibility(View.GONE);
 
         createScannerListener();
     }
@@ -53,8 +81,10 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         try {
             ScannerFragment scannerFragment = new ScannerFragment();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, scannerFragment).commit();
-            scannerFragment.setListener2(scannerListener);                 // Required to get scan results
-            scanInstructionsView.setVisibility(View.VISIBLE);  // Put the instructions back on the screen
+            scannerFragment.setListener2(scannerListener);
+
+            // Put the instructions back on the screen
+            instructions.setVisibility(View.VISIBLE);
         } catch (RuntimeException re) {
             finish();
 
@@ -96,7 +126,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     }
 
     /**
-     * This callback gives us the scan result.  This is relayed through mScannerListener.onScanResult
+     * This callback gives us the scan result.
      *
      * This sample calls a helper class to display the result to the screen
      *
@@ -104,8 +134,9 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
      * @param results an array of ScanResult
      */
     private void onScanFragmentScanResult(Bitmap bitmap, ScanResult2[] results) {
-        ScannerFragment scannerFragment = (ScannerFragment)getFragmentManager().findFragmentById(R.id.fragment_container);
+        ScannerFragment scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.fragment_container);
         scannerFragment.setListener2(null);
+
         showScanResult(bitmap, results[0]);
     }
 
@@ -128,16 +159,94 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
      * @param result an array of ScanResult
      */
     private void showScanResult(Bitmap bitmap, ScanResult2 result) {
-        scanInstructionsView.setVisibility(View.GONE);
+        Log.d(LOG_TAG, result.getText());
+
+        if (result.getText().equals(this.upc)) {
+            goodScan();
+        } else {
+            badScan();
+        }
+
+        /*
+        // Hide instructions
+        instructions.setVisibility(View.GONE);
+
         ScanResultFragment scanResultFragment = new ScanResultFragment();
+
         Bundle args = new Bundle();
         args.putParcelable(ScanResultFragment.ARG_BITMAP, bitmap);
         args.putParcelable(ScanResultFragment.ARG_SCAN_RESULT, result);
+
         scanResultFragment.setArguments(args);
+
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, scanResultFragment).commit();
 
         // Give beep as feedback
-        Beep.beep(getResources());
+        Beep.beep(this);
+        */
+    }
+
+    /**
+     * Helper function to handle a good scan
+     */
+    private void goodScan() {
+        resultIcon.setImageDrawable(getDrawable(R.drawable.ic_check_solid));
+        resultIcon.setVisibility(View.VISIBLE);
+
+        this.quantity--;
+        this.instructions.setText(String.format(
+            getString(R.string.activity_scan_item__instructions),
+            this.quantity, this.name
+        ));
+
+        if (this.quantity == 0) {
+            // All done!
+            doneScanning();
+        } else {
+            // Add listener back after one (1) second
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ScannerFragment scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.fragment_container);
+                    scannerFragment.setListener2(scannerListener);
+
+                    resultIcon.setVisibility(View.GONE);
+                }
+            }, 1000);
+        }
+    }
+
+    /**
+     * Helper function to handle a bad scan
+     */
+    private void badScan() {
+        resultIcon.setImageDrawable(getDrawable(R.drawable.ic_times_solid));
+        resultIcon.setVisibility(View.VISIBLE);
+
+        Beep.beep(this);
+
+        // Add listener back after a half of a second
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ScannerFragment scannerFragment = (ScannerFragment) getFragmentManager().findFragmentById(R.id.fragment_container);
+                scannerFragment.setListener2(scannerListener);
+
+                resultIcon.setVisibility(View.GONE);
+            }
+        }, 500);
+    }
+
+    private void doneScanning() {
+        CustomToast.showTopToast(this, "Success!");
+
+        instructions.setVisibility(View.GONE);
+        resultIcon.setVisibility(View.GONE);
+
+        ScanItemSuccessFragment scanItemSuccessFragment = new ScanItemSuccessFragment();
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, scanItemSuccessFragment).commit();
     }
 
     /**
