@@ -1,4 +1,4 @@
-package edu.gatech.w2gplayground;
+package edu.gatech.w2gplayground.Fragments.ScanItem;
 
 import android.content.Context;
 import android.graphics.Bitmap;

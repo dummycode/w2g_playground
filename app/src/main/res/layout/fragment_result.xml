@@ -5,9 +5,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScanItemActivity">
+    tools:context=".Activities.ScanItemActivity">
 
-    <edu.gatech.w2gplayground.ScanResultImageView
+    <edu.gatech.w2gplayground.Fragments.ScanItem.ScanResultImageView
         android:id="@+id/bitmap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

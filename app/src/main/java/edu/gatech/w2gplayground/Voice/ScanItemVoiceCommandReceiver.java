@@ -10,33 +10,37 @@ import android.widget.Toast;
 
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 
-import edu.gatech.w2gplayground.Activities.MainActivity;
-import edu.gatech.w2gplayground.R;
+import java.util.concurrent.Callable;
 
+import edu.gatech.w2gplayground.Activities.ScanItemActivity;
+import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 /**
  * Class to encapsulate all voice commands
  */
-public class VoiceCommandReceiver extends BroadcastReceiver {
+public class ScanItemVoiceCommandReceiver extends BroadcastReceiver {
     // Voice command substitutions. These substitutions are returned when phrases are recognized.
-    final String MATCH_TEST = "test";
-    final String MATCH_SCAN = "scan";
+    final String MATCH_QUANTITY_OVERRIDE = "quantity_override";
 
     // Voice command custom intent names
     final String TOAST_EVENT = "other_toast";
 
-    private MainActivity mainActivity;
+    private ScanItemActivity scanItemActivity;
+    private String activityLogTag;
+    private Callable phraseCallback;
 
     /**
      * Constructor which takes care of all speech recognizer registration
      *
-     * @param activity MainActivity from which we are created
+     * @param activity ScanItemActivity from which we are created
      */
-    public VoiceCommandReceiver(MainActivity activity) {
-        mainActivity = activity;
-        mainActivity.registerReceiver(this, new IntentFilter(VuzixSpeechClient.ACTION_VOICE_COMMAND));
-        Log.d(MainActivity.LOG_TAG, "Connecting to Vuzix Speech SDK");
+    public ScanItemVoiceCommandReceiver(ScanItemActivity activity) {
+        scanItemActivity = activity;
+        activityLogTag = ScanItemActivity.LOG_TAG;
+
+        scanItemActivity.registerReceiver(this, new IntentFilter(VuzixSpeechClient.ACTION_VOICE_COMMAND));
+        Log.d(activityLogTag, "Connecting to Vuzix Speech SDK");
 
         try {
             VuzixSpeechClient sc = new VuzixSpeechClient(activity);
@@ -48,46 +52,45 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
                 sc.insertWakeWordPhrase("hello vuzix");
                 sc.insertWakeWordPhrase("voice on");
             } catch (NoSuchMethodError e) {
-                Log.i(MainActivity.LOG_TAG, "Setting wake words is not supported. It is introduced in M300 v1.6.6, Blade v2.6, and M400 v1.0.0");
+                Log.i(activityLogTag, "Setting wake words is not supported. It is introduced in M300 v1.6.6, Blade v2.6, and M400 v1.0.0");
             }
 
             try {
                 sc.insertVoiceOffPhrase("voice off");
             } catch (NoSuchMethodError e) {
-                Log.i(MainActivity.LOG_TAG, "Setting voice off is not supported. It is introduced in M300 v1.6.6, Blade v2.6, and M400 v1.0.0");
+                Log.i(activityLogTag, "Setting voice off is not supported. It is introduced in M300 v1.6.6, Blade v2.6, and M400 v1.0.0");
             }
 
             // Insert a custom intent.  Note: these are sent with sendBroadcastAsUser() from the service
             // If you are sending an event to another activity, be sure to test it from the adb shell
             // using: am broadcast -a "<your intent string>"
             // This example sends it to ourself, and we are sure we are active and registered for it
-            Intent customToastIntent = new Intent(mainActivity.CUSTOM_SDK_INTENT);
+            Intent customToastIntent = new Intent(scanItemActivity.CUSTOM_SDK_INTENT);
             sc.defineIntent(TOAST_EVENT, customToastIntent );
             sc.insertIntentPhrase("canned toast", TOAST_EVENT);
 
             // Insert phrases for our broadcast handler
-            sc.insertPhrase("test",  MATCH_TEST);
-            sc.insertPhrase("scan", MATCH_SCAN);
+            sc.insertPhrase("quantity override",  MATCH_QUANTITY_OVERRIDE);
 
 
             // See what we've done
-            Log.i(MainActivity.LOG_TAG, sc.dump());
+            Log.i(activityLogTag, sc.dump());
 
             // The recognizer may not yet be enabled in Settings. We can enable this directly
-            VuzixSpeechClient.EnableRecognizer(mainActivity, true);
+            VuzixSpeechClient.EnableRecognizer(scanItemActivity, true);
         } catch(NoClassDefFoundError e) {
             // We get this exception if the SDK stubs against which we compiled cannot be resolved
             // at runtime. This occurs if the code is not being run on a Vuzix device supporting the voice
             // SDK
-            CustomToast.showTopToast(activity, mainActivity.getResources().getString(R.string.error));
-            Log.e(MainActivity.LOG_TAG, activity.getResources().getString(R.string.error) );
-            Log.e(MainActivity.LOG_TAG, e.getMessage());
+            CustomToast.showTopToast(activity, scanItemActivity.getResources().getString(R.string.error));
+            Log.e(activityLogTag, activity.getResources().getString(R.string.error) );
+            Log.e(activityLogTag, e.getMessage());
 
             e.printStackTrace();
 
             activity.finish();
         } catch (Exception e) {
-            Log.e(MainActivity.LOG_TAG, "Error setting custom vocabulary: " + e.getMessage());
+            Log.e(activityLogTag, "Error setting custom vocabulary: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -104,7 +107,6 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e(MainActivity.LOG_TAG, mainActivity.getMethodName());
         // All phrases registered with insertPhrase() match ACTION_VOICE_COMMAND as do
         // recognizer status updates
         if (intent.getAction().equals(VuzixSpeechClient.ACTION_VOICE_COMMAND)) {
@@ -117,31 +119,27 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
                     // was provided.  All phrases in this example have substitutions as it is
                     // considered best practice
                     String phrase = intent.getStringExtra(VuzixSpeechClient.PHRASE_STRING_EXTRA);
-                    Log.e(MainActivity.LOG_TAG, mainActivity.getMethodName() + " \"" + phrase + "\"");
 
                     // Determine the specific phrase that was recognized and act accordingly
                     switch (phrase) {
-                        case MATCH_TEST:
-                            mainActivity.handleTestCommand();
-                            break;
-                        case MATCH_SCAN:
-                            mainActivity.handleScanCommand();
+                        case MATCH_QUANTITY_OVERRIDE:
+                            scanItemActivity.handleQuantityOverrideCommand();
                             break;
                         default:
-                            Log.e(MainActivity.LOG_TAG, "Phrase not handled");
+                            Log.e(activityLogTag, "Phrase not handled");
                     }
                 } else if (extras.containsKey(VuzixSpeechClient.RECOGNIZER_ACTIVE_BOOL_EXTRA)) {
                     // if we get a recognizer active bool extra, it means the recognizer was
                     // activated or stopped
                     boolean isRecognizerActive = extras.getBoolean(VuzixSpeechClient.RECOGNIZER_ACTIVE_BOOL_EXTRA, false);
-                    mainActivity.RecognizerChangeCallback(isRecognizerActive);
+                    scanItemActivity.RecognizerChangeCallback(isRecognizerActive);
                 } else {
-                    Log.e(MainActivity.LOG_TAG, "Voice Intent not handled");
+                    Log.e(activityLogTag, "Voice Intent not handled");
                 }
             }
         }
         else {
-            Log.e(MainActivity.LOG_TAG, "Other Intent not handled " + intent.getAction() );
+            Log.e(activityLogTag, "Other Intent not handled " + intent.getAction() );
         }
     }
 
@@ -150,11 +148,11 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
      */
     public void unregister() {
         try {
-            mainActivity.unregisterReceiver(this);
-            Log.i(MainActivity.LOG_TAG, "Custom vocab removed");
-            mainActivity = null;
+            scanItemActivity.unregisterReceiver(this);
+            Log.i(activityLogTag, "Custom vocab removed");
+            scanItemActivity = null;
         } catch (Exception e) {
-            Log.e(MainActivity.LOG_TAG, "Custom vocab died " + e.getMessage());
+            Log.e(activityLogTag, "Custom vocab died " + e.getMessage());
         }
     }
 
@@ -165,9 +163,9 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
      */
     public void triggerVoiceAudio(boolean isOn) {
         try {
-            VuzixSpeechClient.TriggerVoiceAudio(mainActivity, isOn);
+            VuzixSpeechClient.TriggerVoiceAudio(scanItemActivity, isOn);
         } catch (NoClassDefFoundError e) {
-            Toast.makeText(mainActivity, R.string.error, Toast.LENGTH_LONG).show();
+            CustomToast.showTopToast(scanItemActivity, scanItemActivity.getResources().getString(R.string.error));
         }
     }
 

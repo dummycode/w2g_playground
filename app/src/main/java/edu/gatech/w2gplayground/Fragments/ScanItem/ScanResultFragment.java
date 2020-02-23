@@ -1,4 +1,4 @@
-package edu.gatech.w2gplayground;
+package edu.gatech.w2gplayground.Fragments.ScanItem;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vuzix.sdk.barcode.ScanResult2;
+
+import edu.gatech.w2gplayground.R;
 
 /**
  * A fragment to show the result of the barcode scan
