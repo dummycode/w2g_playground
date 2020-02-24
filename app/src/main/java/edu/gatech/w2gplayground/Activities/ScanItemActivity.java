@@ -133,6 +133,9 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         super.onDestroy();
     }
 
+    /**
+     * Show the scanner when the camera permissions were granted
+     */
     @Override
     public void permissionsGranted() {
         showScanner();
