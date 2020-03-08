@@ -5,12 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 
 import edu.gatech.w2gplayground.Activities.MainActivity;
+import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
+import edu.gatech.w2gplayground.Enums.Phrase;
 import edu.gatech.w2gplayground.R;
 
 import edu.gatech.w2gplayground.Utilities.CustomToast;
@@ -18,28 +23,31 @@ import edu.gatech.w2gplayground.Utilities.CustomToast;
 /**
  * Class to encapsulate all voice commands
  */
-public class VoiceCommandReceiver extends BroadcastReceiver {
-    // Voice command substitutions. These substitutions are returned when phrases are recognized.
-    final String MATCH_TEST = "test";
-    final String MATCH_SCAN = "scan";
+public class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActivity> extends BroadcastReceiver {
+    // Log tag for the voice command receiver
+    final String LOG_TAG = "VOICE_COMMAND_RECEIVER";
 
     // Voice command custom intent names
     final String TOAST_EVENT = "other_toast";
 
-    private MainActivity mainActivity;
+    // Speech client instance variable
+    VuzixSpeechClient sc;
+
+    // Activity from which we are created
+    T activity;
 
     /**
      * Constructor which takes care of all speech recognizer registration
      *
      * @param activity MainActivity from which we are created
      */
-    public VoiceCommandReceiver(MainActivity activity) {
-        mainActivity = activity;
-        mainActivity.registerReceiver(this, new IntentFilter(VuzixSpeechClient.ACTION_VOICE_COMMAND));
+    public VoiceCommandReceiver(T activity) {
+        this.activity = activity;
+        this.activity.registerReceiver(this, new IntentFilter(VuzixSpeechClient.ACTION_VOICE_COMMAND));
         Log.d(MainActivity.LOG_TAG, "Connecting to Vuzix Speech SDK");
 
         try {
-            VuzixSpeechClient sc = new VuzixSpeechClient(activity);
+            this.sc = new VuzixSpeechClient(activity);
 
             // Delete every phrase in the dictionary!
             sc.deletePhrase("*");
@@ -57,29 +65,15 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
                 Log.i(MainActivity.LOG_TAG, "Setting voice off is not supported. It is introduced in M300 v1.6.6, Blade v2.6, and M400 v1.0.0");
             }
 
-            // Insert a custom intent.  Note: these are sent with sendBroadcastAsUser() from the service
-            // If you are sending an event to another activity, be sure to test it from the adb shell
-            // using: am broadcast -a "<your intent string>"
-            // This example sends it to ourself, and we are sure we are active and registered for it
-            Intent customToastIntent = new Intent(mainActivity.CUSTOM_SDK_INTENT);
-            sc.defineIntent(TOAST_EVENT, customToastIntent );
-            sc.insertIntentPhrase("canned toast", TOAST_EVENT);
-
-            // Insert phrases for our broadcast handler
-            sc.insertPhrase("test",  MATCH_TEST);
-            sc.insertPhrase("scan", MATCH_SCAN);
-
-
-            // See what we've done
             Log.i(MainActivity.LOG_TAG, sc.dump());
 
             // The recognizer may not yet be enabled in Settings. We can enable this directly
-            VuzixSpeechClient.EnableRecognizer(mainActivity, true);
+            VuzixSpeechClient.EnableRecognizer(this.activity, true);
         } catch(NoClassDefFoundError e) {
             // We get this exception if the SDK stubs against which we compiled cannot be resolved
             // at runtime. This occurs if the code is not being run on a Vuzix device supporting the voice
             // SDK
-            CustomToast.showTopToast(activity, mainActivity.getResources().getString(R.string.error));
+            CustomToast.showTopToast(activity, this.activity.getResources().getString(R.string.error));
             Log.e(MainActivity.LOG_TAG, activity.getResources().getString(R.string.error) );
             Log.e(MainActivity.LOG_TAG, e.getMessage());
 
@@ -104,7 +98,7 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e(MainActivity.LOG_TAG, mainActivity.getMethodName());
+        Log.e(MainActivity.LOG_TAG, this.activity.getMethodName());
         // All phrases registered with insertPhrase() match ACTION_VOICE_COMMAND as do
         // recognizer status updates
         if (intent.getAction().equals(VuzixSpeechClient.ACTION_VOICE_COMMAND)) {
@@ -117,24 +111,14 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
                     // was provided.  All phrases in this example have substitutions as it is
                     // considered best practice
                     String phrase = intent.getStringExtra(VuzixSpeechClient.PHRASE_STRING_EXTRA);
-                    Log.e(MainActivity.LOG_TAG, mainActivity.getMethodName() + " \"" + phrase + "\"");
+                    Log.e(MainActivity.LOG_TAG, this.activity.getMethodName() + " \"" + phrase + "\"");
 
-                    // Determine the specific phrase that was recognized and act accordingly
-                    switch (phrase) {
-                        case MATCH_TEST:
-                            mainActivity.handleTestCommand();
-                            break;
-                        case MATCH_SCAN:
-                            mainActivity.handleScanCommand();
-                            break;
-                        default:
-                            Log.e(MainActivity.LOG_TAG, "Phrase not handled");
-                    }
+                    this.activity.handleCommand(phrase);
                 } else if (extras.containsKey(VuzixSpeechClient.RECOGNIZER_ACTIVE_BOOL_EXTRA)) {
                     // if we get a recognizer active bool extra, it means the recognizer was
                     // activated or stopped
                     boolean isRecognizerActive = extras.getBoolean(VuzixSpeechClient.RECOGNIZER_ACTIVE_BOOL_EXTRA, false);
-                    mainActivity.RecognizerChangeCallback(isRecognizerActive);
+                    this.activity.RecognizerChangeCallback(isRecognizerActive);
                 } else {
                     Log.e(MainActivity.LOG_TAG, "Voice Intent not handled");
                 }
@@ -150,11 +134,11 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
      */
     public void unregister() {
         try {
-            mainActivity.unregisterReceiver(this);
-            Log.i(MainActivity.LOG_TAG, "Custom vocab removed");
-            mainActivity = null;
+            activity.unregisterReceiver(this);
+            Log.i(activity.LOG_TAG, "Custom vocab removed");
+            activity = null;
         } catch (Exception e) {
-            Log.e(MainActivity.LOG_TAG, "Custom vocab died " + e.getMessage());
+            Log.e(activity.LOG_TAG, "Custom vocab died " + e.getMessage());
         }
     }
 
@@ -165,10 +149,39 @@ public class VoiceCommandReceiver extends BroadcastReceiver {
      */
     public void triggerVoiceAudio(boolean isOn) {
         try {
-            VuzixSpeechClient.TriggerVoiceAudio(mainActivity, isOn);
+            VuzixSpeechClient.TriggerVoiceAudio(this.activity, isOn);
         } catch (NoClassDefFoundError e) {
-            Toast.makeText(mainActivity, R.string.error, Toast.LENGTH_LONG).show();
+            Toast.makeText(this.activity, R.string.error, Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * Method to insert custom intent to the voice command receiver
+     *
+     * @param intent to be inserted
+     */
+    protected void insertCustomIntent(String intent) {
+        try {
+            // Insert a custom intent.  Note: these are sent with sendBroadcastAsUser() from the service
+            // If you are sending an event to another activity, be sure to test it from the adb shell
+            // using: am broadcast -a "<your intent string>"
+            // This example sends it to ourself, and we are sure we are active and registered for it
+            Intent customToastIntent = new Intent(this.activity.CUSTOM_SDK_INTENT);
+            this.sc.defineIntent(TOAST_EVENT, customToastIntent);
+            sc.insertIntentPhrase("canned toast", TOAST_EVENT);
+        } catch (RemoteException re) {
+            Log.e(LOG_TAG, "Error creating custom intent");
+        }
+    }
+
+    /**
+     * Method to add phrases to the library
+     *
+     * @param phrases Array of phrases
+     */
+    protected void insertPhrases(Phrase[] phrases) {
+        for (Phrase phrase: phrases) {
+            this.sc.insertPhrase(phrase.getPhrase());
+        }
+    }
 }

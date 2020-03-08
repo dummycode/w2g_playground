@@ -7,6 +7,15 @@
     tools:context=".Activities.MainActivity">
 
     <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/small_logo_content_description"
+        app:srcCompat="@drawable/small_logo" />
+
+    <ImageView
         android:id="@+id/listening"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -17,41 +26,18 @@
         android:contentDescription="@string/activity_main__listening_status__yes"
         app:srcCompat="@drawable/ic_microphone_solid" />
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="@string/activity_main__title"
-        android:textSize="24sp" />
-
     <Button
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="100dp"
+        android:layout_below="@+id/imageView3"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:gravity="center"
         android:nextFocusLeft="@+id/scan_item"
         android:nextFocusRight="@+id/scan_item"
         android:text="@string/activity_main__login_button_title" />
-
-    <Button
-        android:id="@+id/scan_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="100dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:nextFocusLeft="@+id/login"
-        android:nextFocusRight="@+id/login"
-        android:text="@string/activity_main__scan_item_button_title" />
 
 </RelativeLayout>

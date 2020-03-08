@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.speech.tts.Voice;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,18 +17,22 @@ import android.widget.ImageView;
 
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 
+import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.R;
-import edu.gatech.w2gplayground.Voice.VoiceCommandReceiver;
+import edu.gatech.w2gplayground.Voice.TestVoiceCommandReceiver;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Activity to show main (launch) screen
+ */
+public class MainActivity extends AppCompatActivity implements VoiceCommandActivity {
     public final static String LOG_TAG = MainActivity.class.getSimpleName();
     public final String CUSTOM_SDK_INTENT = "com.vuzix.sample.vuzix_voicecontrolwithsdk.CustomIntent";
 
-    VoiceCommandReceiver myVoiceCommandReceiver;
+    TestVoiceCommandReceiver myVoiceCommandReceiver;
 
     ImageView listeningStatus;
-    Button scanButton, loginButton;
+    Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
         listeningStatus = findViewById(R.id.listening);
         listeningStatus.setVisibility(View.GONE);
 
-        scanButton = findViewById(R.id.scan_item);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Execute on button click
-                onScanItemClick();
-            }
-        });
-
         loginButton = findViewById(R.id.login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -56,18 +53,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         try {
-            VuzixSpeechClient speechClient = new VuzixSpeechClient(this);
-
             // Create the voice command receiver class
-            myVoiceCommandReceiver = new VoiceCommandReceiver(this);
+            myVoiceCommandReceiver = new TestVoiceCommandReceiver<MainActivity>(this);
 
             // Register another intent handler to demonstrate intents sent from the service
             myIntentReceiver = new MyIntentReceiver();
             registerReceiver(myIntentReceiver , new IntentFilter(CUSTOM_SDK_INTENT));
         } catch (RuntimeException re) {
             CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
-        } catch (RemoteException re) {
-            CustomToast.showTopToast(this, "Error initializing VuzixSpeechClient");
         }
     }
 
@@ -79,24 +72,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Handler for scan item button click
-     */
-    protected void onScanItemClick() {
-        Intent intent = new Intent(this, ScanItemActivity.class);
-
-        // Add extras
-        Bundle extras = new Bundle();
-        extras.putString("name", "Jiffy");
-        extras.putInt("quantity", 2);
-        extras.putString("upc", "072486002205");
-        intent.putExtras(extras);
-
-        // Clear up
-
-        startActivity(intent);
-    }
-
-    /**
      * Handler for login button click
      */
     protected void onLoginClick() {
@@ -104,19 +79,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Handler for "test" command
+     * Handle command
+     *
+     * @param phrase the phrase that was spoken
      */
-    public void handleTestCommand() {
+    public void handleCommand(String phrase) {
         CustomToast.showTopToast(this, "Test command received at " + System.currentTimeMillis());
     }
-
-    /**
-     * Handler for "scan" voice command
-     */
-    public void handleScanCommand() {
-        scanButton.performClick();
-    }
-
 
     /**
      * Unregister from the speech SDK
@@ -127,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(myIntentReceiver);
         super.onDestroy();
     }
-
 
     /**
      * Utility to get the name of the current method for logging

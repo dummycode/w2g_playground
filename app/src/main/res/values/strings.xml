@@ -11,6 +11,8 @@
     <string name="activity_scan_item__failure_message">Barcode failed to scan…</string>
     <string name="activity_scan_item__image_description">Current View</string>
 
+    <string name="activity_login__instructions">Please scan your ID badge</string>
+
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
     <string name="only_on_mseries">This app can only be used on M-Series devices.</string>

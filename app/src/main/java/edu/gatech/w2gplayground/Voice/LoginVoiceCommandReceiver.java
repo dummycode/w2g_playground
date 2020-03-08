@@ -6,17 +6,17 @@ import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Enums.Phrase;
 
 /**
- * Class to take care of Scan Item voice commands
+ * Class to take care of Login voice commands
  *
- * @param <T> Activity from which we are created
+ * @param <T> Activity in which we are created
  */
-public class ScanItemVoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActivity> extends VoiceCommandReceiver<T> {
-    Phrase[] phrases = { Phrase.QUANTITY_OVERRIDE};
+public class LoginVoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActivity> extends VoiceCommandReceiver<T> {
+    Phrase[] phrases = { Phrase.SCAN, Phrase.MANUAL_ENTRY };
 
     /**
      * @param activity Activity from which we are created
      */
-    public ScanItemVoiceCommandReceiver(T activity) {
+    public LoginVoiceCommandReceiver(T activity) {
         super(activity);
 
         insertPhrases(phrases);
