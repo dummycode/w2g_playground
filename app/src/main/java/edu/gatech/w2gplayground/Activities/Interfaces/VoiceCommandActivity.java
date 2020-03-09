@@ -5,7 +5,6 @@ public interface VoiceCommandActivity {
     String CUSTOM_SDK_INTENT = "com.vuzix.sample.vuzix_voicecontrolwithsdk.CustomIntent";
 
     void RecognizerChangeCallback(final boolean isRecognizerActive);
-    void handleCommand(String phrase);
 
-    public String getMethodName();
+    String getMethodName();
 }

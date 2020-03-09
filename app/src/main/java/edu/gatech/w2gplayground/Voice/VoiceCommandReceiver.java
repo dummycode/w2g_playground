@@ -23,7 +23,7 @@ import edu.gatech.w2gplayground.Utilities.CustomToast;
 /**
  * Class to encapsulate all voice commands
  */
-public class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActivity> extends BroadcastReceiver {
+public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActivity> extends BroadcastReceiver {
     // Log tag for the voice command receiver
     final String LOG_TAG = "VOICE_COMMAND_RECEIVER";
 
@@ -113,7 +113,7 @@ public class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActi
                     String phrase = intent.getStringExtra(VuzixSpeechClient.PHRASE_STRING_EXTRA);
                     Log.e(MainActivity.LOG_TAG, this.activity.getMethodName() + " \"" + phrase + "\"");
 
-                    this.activity.handleCommand(phrase);
+                    handleCommand(phrase);
                 } else if (extras.containsKey(VuzixSpeechClient.RECOGNIZER_ACTIVE_BOOL_EXTRA)) {
                     // if we get a recognizer active bool extra, it means the recognizer was
                     // activated or stopped
@@ -184,4 +184,6 @@ public class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCommandActi
             this.sc.insertPhrase(phrase.getPhrase());
         }
     }
+
+    protected abstract void handleCommand(String command);
 }

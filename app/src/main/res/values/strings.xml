@@ -12,6 +12,7 @@
     <string name="activity_scan_item__image_description">Current View</string>
 
     <string name="activity_login__instructions">Please scan your ID badge</string>
+    <string name="activity_login__instructions__manual">Please speak your ID number</string>
 
     <string name="grant_camera_permissions">We need camera permissions.</string>
 

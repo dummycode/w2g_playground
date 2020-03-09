@@ -1,5 +1,7 @@
 package edu.gatech.w2gplayground.Voice;
 
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -23,5 +25,9 @@ public class TestVoiceCommandReceiver<T extends AppCompatActivity & VoiceCommand
         super(activity);
 
         this.insertPhrases(phrases);
+    }
+
+    protected void handleCommand(String command) {
+        Log.i("TEST_VOICE_COMMAND", "Command received");
     }
 }

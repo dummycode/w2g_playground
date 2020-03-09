@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,8 +17,8 @@ import android.widget.TextView;
 import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
 import com.vuzix.sdk.barcode.ScanningRect;
-import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 
+import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.Fragments.ScanItem.ScanItemSuccessFragment;
@@ -30,14 +29,14 @@ import edu.gatech.w2gplayground.Voice.ScanItemVoiceCommandReceiver;
 
 import static edu.gatech.w2gplayground.R.layout.activity_scan_item;
 
-public class ScanItemActivity extends AppCompatActivity implements Permissions.Listener  {
+public class ScanItemActivity extends AppCompatActivity implements Permissions.Listener, VoiceCommandActivity {
 
     public static final String LOG_TAG = ScanItemActivity.class.getSimpleName();
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
     public final String CUSTOM_SDK_INTENT = "com.vuzix.sample.vuzix_voicecontrolwithsdk.CustomIntent";
-    ScanItemVoiceCommandReceiver myVoiceCommandReceiver;
+    ScanItemVoiceCommandReceiver voiceCommandReceiver;
 
     /*
      * Declare variables for UI components
@@ -50,8 +49,8 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     /*
      * Declare item variables
      */
-    private String name, upc;
-    private int quantity;
+    private String name = "Barcode", upc = "1303C";
+    private int quantity = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            this.name = bundle.getString("name", "test");
+            this.name = bundle.getString("name", "Barcode");
             this.upc = bundle.getString("upc", "001");
             this.quantity = bundle.getInt("quantity", 1);
         }
@@ -95,18 +94,14 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         listeningStatus.setVisibility(View.GONE);
 
         try {
-            VuzixSpeechClient speechClient = new VuzixSpeechClient(this);
-
             // Create the voice command receiver class
-            myVoiceCommandReceiver = new ScanItemVoiceCommandReceiver(this);
+            voiceCommandReceiver = new ScanItemVoiceCommandReceiver(this);
 
             // Register another intent handler to demonstrate intents sent from the service
             myIntentReceiver = new ScanItemActivity.MyIntentReceiver();
             registerReceiver(myIntentReceiver , new IntentFilter(CUSTOM_SDK_INTENT));
         } catch (RuntimeException re) {
             CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
-        } catch (RemoteException re) {
-            CustomToast.showTopToast(this, "Error initializing VuzixSpeechClient");
         }
 
         createScannerListener();
@@ -114,8 +109,10 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
 
     @Override
     protected void onStop() {
-        myVoiceCommandReceiver.unregister();
-        unregisterReceiver(myIntentReceiver);
+        if (voiceCommandReceiver != null && myIntentReceiver != null) {
+            voiceCommandReceiver.unregister();
+            unregisterReceiver(myIntentReceiver);
+        }
 
         super.onStop();
     }
@@ -125,8 +122,10 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
      */
     @Override
     protected void onDestroy() {
-        myVoiceCommandReceiver.unregister();
-        unregisterReceiver(myIntentReceiver);
+        if (voiceCommandReceiver != null && myIntentReceiver != null) {
+            voiceCommandReceiver.unregister();
+            unregisterReceiver(myIntentReceiver);
+        }
 
         super.onDestroy();
     }
@@ -145,6 +144,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
 
             Bundle args = new Bundle();
             args.putParcelable(ScannerFragment.ARG_SCANNING_RECT, new ScanningRect(.5f, .5f));
+            args.putBoolean(ScannerFragment.ARG_ZOOM_IN_MODE, true);
 
             scannerFragment.setArguments(args);
 
@@ -204,7 +204,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         scannerFragment.setListener2(null);
 
         ScanResult2 result = results[0];
-        Log.d(LOG_TAG, results[0].getText());
+        Log.i(LOG_TAG, results[0].getText());
 
         if (result.getText().equals(this.upc)) {
             goodScan();
@@ -335,6 +335,13 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     }
 
     /**
+     * Handler for commands
+     */
+    public void handleCommand(String command) {
+        Log.d(LOG_TAG, "Command!");
+    }
+
+    /**
      * Update the text from "Listening..." to "Not listening" based on the state
      */
     private void updateListeningStatusText(boolean isRecognizerActive) {
@@ -369,5 +376,14 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         public void onReceive(Context context, Intent intent) {
             CustomToast.showTopToast(context, "Custom Intent Detected");
         }
+    }
+
+    /**
+     * Utility to get the name of the current method for logging
+     *
+     * @return String name of the current method
+     */
+    public String getMethodName() {
+        return LOG_TAG + ":" + this.getClass().getSimpleName() + "." + new Throwable().getStackTrace()[1].getMethodName();
     }
 }

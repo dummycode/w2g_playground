@@ -20,7 +20,6 @@ import com.vuzix.sdk.barcode.ScanningRect;
 
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
-import edu.gatech.w2gplayground.Enums.Phrase;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
@@ -37,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
     private final String AUTH_KEY = "my_auth_key_embedded_in_qr_code";
 
-    LoginVoiceCommandReceiver myVoiceCommandReceiver;
+    LoginVoiceCommandReceiver voiceCommandReceiver;
 
     /*
      * Declare variables for UI components
@@ -81,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
         try {
             // Create the voice command receiver class
-            myVoiceCommandReceiver = new LoginVoiceCommandReceiver<>(this);
+            voiceCommandReceiver = new LoginVoiceCommandReceiver(this);
 
             // Register another intent handler to demonstrate intents sent from the service
             myIntentReceiver =  new MyIntentReceiver();
@@ -95,8 +94,10 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
     @Override
     protected void onStop() {
-        myVoiceCommandReceiver.unregister();
-        unregisterReceiver(myIntentReceiver);
+        if (voiceCommandReceiver != null) {
+            voiceCommandReceiver.unregister();
+            unregisterReceiver(myIntentReceiver);
+        }
 
         super.onStop();
     }
@@ -106,8 +107,10 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
      */
     @Override
     protected void onDestroy() {
-        myVoiceCommandReceiver.unregister();
-        unregisterReceiver(myIntentReceiver);
+        if (voiceCommandReceiver != null) {
+            voiceCommandReceiver.unregister();
+            unregisterReceiver(myIntentReceiver);
+        }
 
         super.onDestroy();
     }
@@ -300,32 +303,18 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
     }
 
     /**
-     * Handler for phrases
-     *
-     * @param phrase The phrase to handle
-     */
-    public void handleCommand(String phrase) {
-        if (phrase.equals(Phrase.SCAN.getPhrase())) {
-            this.handleScanCommand();
-        } else if (phrase.equals(Phrase.MANUAL_ENTRY.getPhrase())){
-            this.handleManualEntryCommand();
-        } else {
-            Log.e(LOG_TAG, "Phrase not handled");
-        }
-    }
-
-    /**
      * Handler for "scan" command
      */
-    private void handleScanCommand() {
+    public void handleScanCommand() {
         CustomToast.showTopToast(this, "Scan command received at " + System.currentTimeMillis());
     }
 
     /**
-     * Handler for "scan" command
+     * Handler for "manual entry" command
      */
-    private void handleManualEntryCommand() {
+    public void handleManualEntryCommand() {
         CustomToast.showTopToast(this, "Manual entry command received at " + System.currentTimeMillis());
+        instructions.setText(R.string.activity_login__instructions__manual);
     }
 
     /**
