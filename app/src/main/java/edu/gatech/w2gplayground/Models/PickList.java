@@ -2,7 +2,7 @@ package edu.gatech.w2gplayground.Models;
 
 import java.util.List;
 
-public class PickList {
+public class PickList extends Model {
     private String id;
     private List<Order> orders;
 
@@ -17,5 +17,12 @@ public class PickList {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    /**
+     * @return number of orders in pick list
+     */
+    public int getOrderCount() {
+        return this.orders.size();
     }
 }

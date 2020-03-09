@@ -14,6 +14,10 @@
     <string name="activity_login__instructions">Please scan your ID badge</string>
     <string name="activity_login__instructions__manual">Please speak your ID number</string>
 
+    <string name="activity_home__order_count">%d orders</string>
+
+    <string name="activity_picklist__instructions">Instructions for current step go here</string>
+
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
     <string name="only_on_mseries">This app can only be used on M-Series devices.</string>

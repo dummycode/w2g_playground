@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context=".Activities.ScanItemActivity">
+    tools:context=".Activities.LoginActivity">
 
     <ImageView
         android:id="@+id/listening"
@@ -18,34 +18,17 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
         android:contentDescription="@string/activity_main__listening_status__yes"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_microphone_solid" />
 
-    <RelativeLayout
-        android:id="@+id/outer"
-        android:layout_width="500dp"
-        android:layout_height="500dp"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="false"
-        android:layout_marginBottom="100dp">
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/ic_check_solid" />
-
-    </RelativeLayout>
-
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        tools:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/instructions"
@@ -54,7 +37,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:text="@string/activity_scan_item__instructions"
+        android:text="@string/activity_picklist__instructions"
         android:textAlignment="center"
         android:textSize="20sp" />
 

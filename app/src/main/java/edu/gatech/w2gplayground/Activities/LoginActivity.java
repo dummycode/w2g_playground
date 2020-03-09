@@ -2,10 +2,6 @@ package edu.gatech.w2gplayground.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +19,6 @@ import edu.gatech.w2gplayground.Audio.Beep;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
-import edu.gatech.w2gplayground.Fragments.ScanItem.ScanResultFragment;
 import edu.gatech.w2gplayground.Voice.LoginVoiceCommandReceiver;
 
 import static edu.gatech.w2gplayground.R.layout.activity_scan_item;
@@ -34,7 +29,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
-    private final String AUTH_KEY = "my_auth_key_embedded_in_qr_code";
+    private final String AUTH_KEY = "103C";
 
     LoginVoiceCommandReceiver voiceCommandReceiver;
 
@@ -51,9 +46,6 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         super.onCreate(savedInstanceState);
         setContentView(activity_scan_item);
 
-        // Handle passed in arguments
-        Bundle bundle = getIntent().getExtras();
-
         Permissions permissionsFragment = (Permissions) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
         if (permissionsFragment == null) {
             permissionsFragment = new Permissions();
@@ -63,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         permissionsFragment.setListener(this);
 
 
-        instructions = findViewById(R.id.scan_instructions);
+        instructions = findViewById(R.id.instructions);
 
         // Set instructions
         this.instructions.setText(getString(R.string.activity_login__instructions));
@@ -82,9 +74,6 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
             // Create the voice command receiver class
             voiceCommandReceiver = new LoginVoiceCommandReceiver(this);
 
-            // Register another intent handler to demonstrate intents sent from the service
-            myIntentReceiver =  new MyIntentReceiver();
-            registerReceiver(myIntentReceiver , new IntentFilter(CUSTOM_SDK_INTENT));
         } catch (RuntimeException re) {
             CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
         }
@@ -92,24 +81,25 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         createScannerListener();
     }
 
+    /**
+     * On activity stop we should unregister the voice command receiver
+     */
     @Override
     protected void onStop() {
         if (voiceCommandReceiver != null) {
             voiceCommandReceiver.unregister();
-            unregisterReceiver(myIntentReceiver);
         }
 
         super.onStop();
     }
 
     /**
-     * Unregister from the speech SDK
+     * On activity destroy we should unregister the voice command receiver
      */
     @Override
     protected void onDestroy() {
         if (voiceCommandReceiver != null) {
             voiceCommandReceiver.unregister();
-            unregisterReceiver(myIntentReceiver);
         }
 
         super.onDestroy();
@@ -123,6 +113,9 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         showScanner();
     }
 
+    /**
+     * Displays the scanner on screen in the fragment container
+     */
     private void showScanner() {
         try {
             ScannerFragment scannerFragment = new ScannerFragment();
@@ -244,28 +237,6 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
     }
 
     /**
-     * Basic control to return from the result fragment to the scanner fragment, or exit the app from the scanner
-     */
-    @Override
-    public void onBackPressed() {
-        if (isScanResultShowing()) {
-            showScanner();
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    /**
-     * Utility to determine if the scanner result fragment is showing
-     *
-     * @return True if showing
-     */
-    private boolean isScanResultShowing() {
-        return getFragmentManager().findFragmentById(R.id.fragment_container) instanceof ScanResultFragment;
-    }
-
-
-    /**
      * Update the text from "Listening..." to "Not listening" based on the state
      */
     private void updateListeningStatusText(boolean isRecognizerActive) {
@@ -288,18 +259,6 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
                 updateListeningStatusText(isRecognizerActive);
             }
         });
-    }
-
-    /**
-     * You may prefer using explicit intents for each recognized phrase. This receiver demonstrates that.
-     */
-    private LoginActivity.MyIntentReceiver myIntentReceiver;
-
-    public class MyIntentReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            CustomToast.showTopToast(context, "Custom Intent Detected");
-        }
     }
 
     /**

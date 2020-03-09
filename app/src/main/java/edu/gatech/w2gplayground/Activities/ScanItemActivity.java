@@ -75,7 +75,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         permissionsFragment.setListener(this);
 
 
-        instructions = findViewById(R.id.scan_instructions);
+        instructions = findViewById(R.id.instructions);
 
         // Set instructions
         this.instructions.setText(String.format(
