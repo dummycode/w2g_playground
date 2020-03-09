@@ -26,9 +26,12 @@
         android:id="@+id/fragment_container"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="false"
         android:layout_gravity="center"
-        tools:layout_centerHorizontal="true" />
+        tools:layout_centerHorizontal="true" >
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/instructions"
@@ -40,6 +43,17 @@
         android:text="@string/activity_picklist__instructions"
         android:textAlignment="center"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/secondary_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/activity_picklist__instructions"
+        android:textAlignment="center"
+        android:textSize="14sp" />
 
 </RelativeLayout>
 

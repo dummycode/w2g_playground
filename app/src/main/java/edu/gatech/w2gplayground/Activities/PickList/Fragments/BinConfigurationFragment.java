@@ -1,14 +1,21 @@
 package edu.gatech.w2gplayground.Activities.PickList.Fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
+import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.R;
+import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 /**
  * A fragment to show the bin configuration
@@ -27,6 +34,10 @@ public class BinConfigurationFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Register receiver for key down event
+        BroadcastReceiver receiver = new KeyBroadcastReceiver();
+        getContext().registerReceiver(receiver, new IntentFilter(PickListActivity.keyDownAction));
+
         return inflater.inflate(R.layout.fragment_bin_configuration, container, false);
     }
 
@@ -38,14 +49,36 @@ public class BinConfigurationFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        TextView text = view.findViewById(R.id.text);
+        ImageView binConfigurationImage = view.findViewById(R.id.bin_configuration);
 
         Bundle args = getArguments();
+        int orderCount = 0;
 
         if (args != null) {
-            int orderCount = args.getInt("orderCount");
+            orderCount = args.getInt("orderCount");
         }
-        text.setText("Yee haw");
+
+        switch (orderCount) {
+            case 0:
+            case 1:
+            case 2:
+                binConfigurationImage.setImageResource(R.drawable.ic_bin_config);
+                break;
+            default:
+                CustomToast.showTopToast(this.getContext(), "Bin configuration unknown");
+                break;
+        }
+    }
+
+    public class KeyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int keyCode = intent.getIntExtra("KEY_CODE", 0);
+
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                ((PickListActivity) getActivity()).binConfiguationDone();
+            }
+        }
     }
 }
 

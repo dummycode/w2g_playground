@@ -17,6 +17,8 @@
     <string name="activity_home__order_count">%d orders</string>
 
     <string name="activity_picklist__instructions">Instructions for current step go here</string>
+    <string name="activity_picklist__bin_instructions">Configure bins as shown</string>
+    <string name="activity_picklist__bin_instructions__secondary">Press or say \"Select\" to advance</string>
 
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
@@ -28,4 +30,5 @@
     <string name="error">Unknown error occurred!</string>
 
     <string name="small_logo_content_description">Ware2Go Small Logo</string>
+    <string name="image_content_description__placeholder">Image content description placeholder</string>
 </resources>

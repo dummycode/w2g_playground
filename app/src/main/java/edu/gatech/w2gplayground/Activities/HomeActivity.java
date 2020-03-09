@@ -32,6 +32,9 @@ public class HomeActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.picklists);
         listView.setAdapter(adapter);
 
+        // Focus on list view
+        listView.requestFocus();
+
         listView.setOnItemClickListener((parent, view, position, id) -> handleItemClick(position));
     }
 

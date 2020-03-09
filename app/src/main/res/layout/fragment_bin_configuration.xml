@@ -7,16 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".Activities.ScanItemActivity">
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:text="@android:string/ok"
-        android:textAlignment="center"
-        android:textSize="48sp"
-        tools:layout_centerHorizontal="true" />
+    <ImageView
+        android:id="@+id/bin_configuration"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/image_content_description__placeholder"
+        tools:layout_centerVertical="true" />
 
 
 </RelativeLayout>
