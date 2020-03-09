@@ -7,12 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".Activities.ScanItemActivity">
 
-    <ImageView
+    <TextView
         android:id="@+id/next_location"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
-        android:contentDescription="@string/image_content_description__placeholder"
+        android:gravity="center"
+        android:text="@android:string/ok"
+        android:textAlignment="center"
+        android:textSize="64sp"
         tools:layout_centerVertical="true" />
 
 

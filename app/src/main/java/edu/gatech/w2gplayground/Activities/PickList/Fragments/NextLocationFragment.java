@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -18,9 +19,9 @@ import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 /**
- * A fragment to show the bin configuration
+ * A fragment to show the next location
  */
-public class BinConfigurationFragment extends Fragment {
+public class NextLocationFragment extends Fragment {
 
     /**
      * Inflate the correct layout upon creation
@@ -38,7 +39,7 @@ public class BinConfigurationFragment extends Fragment {
         BroadcastReceiver receiver = new KeyBroadcastReceiver();
         getContext().registerReceiver(receiver, new IntentFilter(PickListActivity.keyDownAction));
 
-        return inflater.inflate(R.layout.fragment_bin_configuration, container, false);
+        return inflater.inflate(R.layout.fragment_next_location, container, false);
     }
 
     /**
@@ -49,25 +50,16 @@ public class BinConfigurationFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        ImageView binConfigurationImage = view.findViewById(R.id.next_location);
 
         Bundle args = getArguments();
-        int orderCount = 0;
+        String nextLocation = "LOC-01";
 
         if (args != null) {
-            orderCount = args.getInt("orderCount");
+            nextLocation = args.getString("nextLocation");
         }
 
-        switch (orderCount) {
-            case 0:
-            case 1:
-            case 2:
-                binConfigurationImage.setImageResource(R.drawable.ic_bin_config);
-                break;
-            default:
-                CustomToast.showTopToast(this.getContext(), "Bin configuration unknown");
-                break;
-        }
+        TextView nextLocationText = view.findViewById(R.id.next_location);
+        nextLocationText.setText(nextLocation);
     }
 
     public class KeyBroadcastReceiver extends BroadcastReceiver {
@@ -76,7 +68,7 @@ public class BinConfigurationFragment extends Fragment {
             int keyCode = intent.getIntExtra("KEY_CODE", 0);
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                ((PickListActivity) getActivity()).binConfiguationDone();
+                ((PickListActivity) getActivity()).nextLocationDone();
             }
         }
     }

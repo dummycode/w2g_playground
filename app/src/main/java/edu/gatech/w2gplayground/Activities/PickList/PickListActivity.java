@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.gatech.w2gplayground.Activities.LoginActivity;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.BinConfigurationFragment;
+import edu.gatech.w2gplayground.Activities.PickList.Fragments.NextLocationFragment;
 import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
@@ -69,6 +70,21 @@ public class PickListActivity extends AppCompatActivity {
 
     public void binConfiguationDone() {
         CustomToast.showTopToast(this, "Bins configured!");
+
+        // Move on to next location
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(fragmentContainer.getId(), new NextLocationFragment())
+                .addToBackStack(null)
+                .commit();
+
+        instructions.setText(R.string.activity_picklist__next_location_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
+    }
+
+    public void nextLocationDone() {
+        CustomToast.showTopToast(this, "At location!");
     }
 
     @Override

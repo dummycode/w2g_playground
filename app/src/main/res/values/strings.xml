@@ -18,7 +18,11 @@
 
     <string name="activity_picklist__instructions">Instructions for current step go here</string>
     <string name="activity_picklist__bin_instructions">Configure bins as shown</string>
-    <string name="activity_picklist__bin_instructions__secondary">Press or say \"Select\" to advance</string>
+    <string name="activity_picklist__bin_instructions__secondary">Press or say \"select\" to advance</string>
+    <string name="activity_picklist__next_location_instructions">Proceed to location</string>
+    <string name="activity_picklist__next_location_instructions__secondary">Press or say \"select\" to advance</string>
+
+
 
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
