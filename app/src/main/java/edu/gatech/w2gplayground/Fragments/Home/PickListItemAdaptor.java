@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -38,6 +37,7 @@ public class PickListItemAdaptor extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.fragment_picklist_item, null,true);
 
         TextView titleText = rowView.findViewById(R.id.title);
+        TextView assignedAt = rowView.findViewById(R.id.assigned_at);
         TextView orderCountText = rowView.findViewById(R.id.order_count);
 
         PickList pickList = pickLists[position];
@@ -48,6 +48,9 @@ public class PickListItemAdaptor extends ArrayAdapter<String> {
                 context.getString(R.string.activity_home__order_count),
                 pickList.getOrderCount()
             )
+        );
+        assignedAt.setText(
+            pickList.getAssignedAtString()
         );
 
         return rowView;

@@ -8,16 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.speech.tts.Voice;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
-
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
+import edu.gatech.w2gplayground.ApplicationState;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Voice.TestVoiceCommandReceiver;
@@ -62,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandActiv
         } catch (RuntimeException re) {
             CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
         }
+
+        // If already logged in, go directly to main activity
+        if (ApplicationState.currentUser != null) {
+            Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(myIntent);
+        }
     }
 
     @Override
@@ -75,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandActiv
      * Handler for login button click
      */
     protected void onLoginClick() {
-        CustomToast.showTopToast(this, "Login pressed!");
+        // Go to login activity
+        Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(myIntent);
     }
 
     /**

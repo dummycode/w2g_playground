@@ -2,6 +2,7 @@ package edu.gatech.w2gplayground.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +16,10 @@ import com.vuzix.sdk.barcode.ScannerFragment;
 import com.vuzix.sdk.barcode.ScanningRect;
 
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
+import edu.gatech.w2gplayground.ApplicationState;
 import edu.gatech.w2gplayground.Audio.Beep;
+import edu.gatech.w2gplayground.Models.Generators.UserGenerator;
+import edu.gatech.w2gplayground.Models.User;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
@@ -29,7 +33,8 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
-    private final String AUTH_KEY = "103C";
+    private final String AUTH_KEY = "MY_AUTH_KEY";
+    private final User user = UserGenerator.userWithAuthKey(AUTH_KEY);
 
     LoginVoiceCommandReceiver voiceCommandReceiver;
 
@@ -79,6 +84,8 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         }
 
         createScannerListener();
+
+        Log.d(LOG_TAG, user.getAuthKey());
     }
 
     /**
@@ -122,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
             Bundle args = new Bundle();
             args.putParcelable(ScannerFragment.ARG_SCANNING_RECT, new ScanningRect(.5f, .5f));
+            args.putBoolean(ScannerFragment.ARG_ZOOM_IN_MODE, true);
 
             scannerFragment.setArguments(args);
 
@@ -183,8 +191,11 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         ScanResult2 result = results[0];
         Log.d(LOG_TAG, results[0].getText());
 
+        Log.d(LOG_TAG, user.getAuthKey());
+
         // TODO: authenticate via API
-        if (result.getText().equals(this.AUTH_KEY)) {
+        if (result.getText().equals(user.getAuthKey())) {
+            ApplicationState.currentUser = user;
             goodScan();
         } else {
             badScan();
@@ -210,8 +221,20 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         resultIcon.setImageDrawable(getDrawable(R.drawable.ic_check_solid));
         resultIcon.setVisibility(View.VISIBLE);
 
+        // Go to home activity
+        Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
+
+        // Go after half a second
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(myIntent);
+            }
+        }, 500);
+
         // All done!
-        CustomToast.showTopToast(this, "Logged in!");
+        CustomToast.showTopToast(this, String.format("Welcome %s!", ApplicationState.currentUser.getFullName()));
     }
 
     /**

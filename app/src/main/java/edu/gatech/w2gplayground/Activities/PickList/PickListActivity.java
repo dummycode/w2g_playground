@@ -1,6 +1,5 @@
 package edu.gatech.w2gplayground.Activities.PickList;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;

@@ -1,6 +1,6 @@
 package edu.gatech.w2gplayground.Models;
 
-public class Item extends Model {
+public class Item{
     String id;
     String upc;
     String name;

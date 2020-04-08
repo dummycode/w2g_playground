@@ -1,5 +1,6 @@
 package edu.gatech.w2gplayground.Models.Generators;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,6 @@ public class PickListGenerator extends Generator {
         orders.add(OrderGenerator.order());
         orders.add(OrderGenerator.order());
 
-        return new PickList(randId(), orders);
+        return new PickList(randId(), new Date(), orders);
     }
 }
