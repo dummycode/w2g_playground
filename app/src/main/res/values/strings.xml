@@ -14,15 +14,20 @@
     <string name="activity_login__instructions">Please scan your ID badge</string>
     <string name="activity_login__instructions__manual">Please speak your ID number</string>
 
+    <string name="activity_home__id_title">ID</string>
+    <string name="activity_home__assigned_at_title">Date Assigned</string>
+    <string name="activity_home__order_count_title">Orders</string>
     <string name="activity_home__order_count">%d orders</string>
 
     <string name="activity_picklist__instructions">Instructions for current step go here</string>
     <string name="activity_picklist__bin_instructions">Configure bins as shown</string>
     <string name="activity_picklist__bin_instructions__secondary">Press or say \"select\" to advance</string>
+
     <string name="activity_picklist__next_location_instructions">Proceed to location</string>
     <string name="activity_picklist__next_location_instructions__secondary">Press or say \"select\" to advance</string>
 
-
+    <string name="activity_picklist__scan_location_instructions">Scan %s location barcode</string>
+    <string name="activity_picklist__scan_location_instructions__secondary">Say \"manual\" to manually enter barcode information</string>
 
     <string name="grant_camera_permissions">We need camera permissions.</string>
 

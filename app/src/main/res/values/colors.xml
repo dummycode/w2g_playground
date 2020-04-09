@@ -3,4 +3,9 @@
     <color name="colorPrimary">#2C2D4A</color>
     <color name="colorPrimaryDark">#2C2D4A</color>
     <color name="colorAccent">#63647A</color>
+    <color name="darkBg">#12121A</color>
+    <color name="lightBg">#F2F3F8</color>
+    <color name="primaryText">#2C2D4A</color>
+    <color name="textOnDarkBg">#A6A7AE</color>
+    <color name="w2gGreen">#077C79</color>
 </resources>

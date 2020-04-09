@@ -9,14 +9,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.R;
-import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 /**
  * A fragment to show the next location
@@ -68,7 +66,10 @@ public class NextLocationFragment extends Fragment {
             int keyCode = intent.getIntExtra("KEY_CODE", 0);
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                ((PickListActivity) getActivity()).nextLocationDone();
+                PickListActivity activity = (PickListActivity) getActivity();
+                if (activity != null) {
+                    activity.nextLocationDone();
+                }
             }
         }
     }

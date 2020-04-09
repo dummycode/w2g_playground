@@ -9,49 +9,53 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="0dp"
+        android:background="@color/w2gGreen">
 
         <TextView
-            android:id="@+id/assigned_at"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:gravity="center"
-            android:text="@android:string/ok"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="@android:string/ok" />
-
-        <TextView
-            android:id="@+id/title"
+            android:id="@+id/id_title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:gravity="center_vertical"
-            android:text="@android:string/ok"
+            android:text="@string/activity_home__id_title"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/order_count"
-            tools:text="@android:string/ok" />
+            android:textColor="@color/hud_white"
+            app:layout_constraintEnd_toEndOf="@+id/order_count_title"
+            tools:text="@string/activity_home__id_title" />
 
         <TextView
-            android:id="@+id/order_count"
+            android:id="@+id/assigned_at_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="@string/activity_home__assigned_at_title"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/hud_white"
+            tools:text="@string/activity_home__assigned_at_title" />
+
+        <TextView
+            android:id="@+id/order_count_title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
-            android:gravity="center"
-            android:text="@android:string/ok"
-            android:textAlignment="textEnd"
+            android:gravity="center_vertical|end"
+            android:text="@string/activity_home__order_count_title"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="@android:string/ok" />
+            android:textColor="@color/hud_white"
+            android:textAlignment="textEnd"
+            tools:text="@string/activity_home__order_count_title" />
     </RelativeLayout>
 
     <ListView

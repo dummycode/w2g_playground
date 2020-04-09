@@ -7,6 +7,18 @@
     android:layout_height="150dp">
 
     <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        android:text="@android:string/ok"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/order_count"
+        tools:text="@android:string/ok" />
+
+    <TextView
         android:id="@+id/assigned_at"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -21,25 +33,12 @@
         tools:text="@android:string/ok" />
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="20dp"
-        android:gravity="center_vertical"
-        android:text="@android:string/ok"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/order_count"
-        tools:text="@android:string/ok" />
-
-    <TextView
         android:id="@+id/order_count"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
-        android:gravity="center"
         android:text="@android:string/ok"
         android:textAlignment="textEnd"
         android:textSize="20sp"

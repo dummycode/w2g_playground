@@ -204,7 +204,6 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         scannerFragment.setListener2(null);
 
         ScanResult2 result = results[0];
-        Log.i(LOG_TAG, results[0].getText());
 
         if (result.getText().equals(this.upc)) {
             goodScan();

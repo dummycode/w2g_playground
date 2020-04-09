@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import edu.gatech.w2gplayground.Activities.LoginActivity;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.BinConfigurationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.NextLocationFragment;
+import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanLocationFragment;
 import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
@@ -82,8 +83,26 @@ public class PickListActivity extends AppCompatActivity {
         secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
     }
 
+    /**
+     * Handler for when next location fragment is done
+     */
     public void nextLocationDone() {
+        // Move to scan location
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(fragmentContainer.getId(), new ScanLocationFragment())
+                .addToBackStack(null)
+                .commit();
+
+        instructions.setText(R.string.activity_picklist__next_location_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
+
         CustomToast.showTopToast(this, "At location!");
+    }
+
+    public void scanLocationDone() {
+        CustomToast.showTopToast(this, "Scanned Location");
     }
 
     @Override
