@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import edu.gatech.w2gplayground.Activities.LoginActivity;
+import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.BinConfigurationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.NextLocationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanLocationFragment;
@@ -19,12 +19,13 @@ import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
+import edu.gatech.w2gplayground.Voice.PickListVoiceCommandReceiver;
 
 
 /**
  * Activity for a pick list
  */
-public class PickListActivity extends AppCompatActivity {
+public class PickListActivity extends AppCompatActivity implements VoiceCommandActivity {
     public static final String LOG_TAG = PickListActivity.class.getSimpleName();
     public static final String keyDownAction = "KEY_DOWN";
 
@@ -34,6 +35,8 @@ public class PickListActivity extends AppCompatActivity {
     Order[] orders;
 
     private ImageView listeningStatus;
+    PickListVoiceCommandReceiver voiceCommandReceiver;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class PickListActivity extends AppCompatActivity {
      * Handler for when next location fragment is done
      */
     public void nextLocationDone() {
+        CustomToast.showTopToast(this, "At location");
+
         // Move to scan location
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         getSupportFragmentManager()
@@ -95,10 +100,8 @@ public class PickListActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
 
-        instructions.setText(R.string.activity_picklist__next_location_instructions);
-        secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
-
-        CustomToast.showTopToast(this, "At location!");
+        instructions.setText(R.string.activity_picklist__scan_location_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__scan_location_instructions__secondary);
     }
 
     public void scanLocationDone() {
@@ -115,5 +118,39 @@ public class PickListActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Received key down " + keyCode);
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Update the text from "Listening..." to "Not listening" based on the state
+     */
+    private void updateListeningStatus(boolean isRecognizerActive) {
+        if (isRecognizerActive) {
+            listeningStatus.setVisibility(View.VISIBLE);
+        } else {
+            listeningStatus.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * A callback for the SDK to notify us if the recognizer starts or stop listening
+     *
+     * @param isRecognizerActive boolean - true when listening
+     */
+    public void RecognizerChangeCallback(final boolean isRecognizerActive) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateListeningStatus(isRecognizerActive);
+            }
+        });
+    }
+
+    /**
+     * Utility to get the name of the current method for logging
+     *
+     * @return String name of the current method
+     */
+    public String getMethodName() {
+        return LOG_TAG + ":" + this.getClass().getSimpleName() + "." + new Throwable().getStackTrace()[1].getMethodName();
     }
 }

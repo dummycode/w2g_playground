@@ -191,8 +191,6 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         ScanResult2 result = results[0];
         Log.d(LOG_TAG, results[0].getText());
 
-        Log.d(LOG_TAG, user.getAuthKey());
-
         // TODO: authenticate via API
         if (result.getText().equals(user.getAuthKey())) {
             ApplicationState.currentUser = user;

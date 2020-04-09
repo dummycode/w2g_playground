@@ -23,9 +23,8 @@
     <RelativeLayout
         android:id="@+id/outer"
         android:layout_width="500dp"
-        android:layout_height="500dp"
+        android:layout_height="281.25dp"
         android:layout_centerInParent="true"
-        android:layout_centerHorizontal="false"
         android:layout_marginBottom="100dp">
 
         <FrameLayout
@@ -54,7 +53,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:text="@string/activity_scan_item__instructions"
+        android:text="@string/activity_login__instructions"
         android:textAlignment="center"
         android:textSize="20sp" />
 

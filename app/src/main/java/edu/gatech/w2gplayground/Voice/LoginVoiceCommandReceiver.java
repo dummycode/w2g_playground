@@ -2,6 +2,7 @@ package edu.gatech.w2gplayground.Voice;
 
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import edu.gatech.w2gplayground.Activities.LoginActivity;
@@ -24,7 +25,7 @@ public class LoginVoiceCommandReceiver extends VoiceCommandReceiver<LoginActivit
         handlerMap.put(Phrase.SCAN, activity::handleScanCommand);
         handlerMap.put(Phrase.MANUAL_ENTRY, activity::handleManualEntryCommand);
 
-        insertPhrases(phrases);
+        insertPhrases(Arrays.asList(phrases));
     }
 
     /**

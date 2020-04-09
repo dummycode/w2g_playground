@@ -2,6 +2,8 @@ package edu.gatech.w2gplayground.Voice;
 
 import android.util.Log;
 
+import java.util.Arrays;
+
 import edu.gatech.w2gplayground.Activities.ScanItemActivity;
 import edu.gatech.w2gplayground.Enums.Phrase;
 
@@ -17,7 +19,7 @@ public class ScanItemVoiceCommandReceiver extends VoiceCommandReceiver<ScanItemA
     public ScanItemVoiceCommandReceiver(ScanItemActivity activity) {
         super(activity);
 
-        insertPhrases(phrases);
+        insertPhrases(Arrays.asList(phrases));
     }
 
     protected void handleCommand(String command) {

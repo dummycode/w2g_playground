@@ -18,13 +18,9 @@ import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
 import com.vuzix.sdk.barcode.ScanningRect;
 
-import edu.gatech.w2gplayground.Activities.ScanItemActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
-import edu.gatech.w2gplayground.Fragments.ScanItem.ScanItemSuccessFragment;
-import edu.gatech.w2gplayground.Fragments.ScanItem.ScanResultFragment;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
-import edu.gatech.w2gplayground.Voice.ScanItemVoiceCommandReceiver;
 
 
 /**
@@ -37,8 +33,6 @@ public class ScanLocationFragment extends Fragment {
     // UI components
     private ScannerFragment.Listener2 scannerListener;
     private ImageView resultIcon;
-    private ImageView listeningStatus;
-    ScanItemVoiceCommandReceiver voiceCommandReceiver;
     FragmentActivity activity;
 
     /**
@@ -74,8 +68,8 @@ public class ScanLocationFragment extends Fragment {
             locationId = args.getString("nextLocation");
         }
 
-        this.resultIcon = view.findViewById(R.id.imageView2);
-        this.resultIcon.setVisibility(View.GONE);
+        this.resultIcon = view.findViewById(R.id.result_icon);
+//        this.resultIcon.setVisibility(View.GONE);
 
         createScannerListener();
         showScanner();
@@ -197,25 +191,12 @@ public class ScanLocationFragment extends Fragment {
         CustomToast.showTopToast(activity, "Success!");
 
         resultIcon.setVisibility(View.GONE);
-
-        ScanItemSuccessFragment scanItemSuccessFragment = new ScanItemSuccessFragment();
-        activity.getFragmentManager().beginTransaction().replace(R.id.fragment_container, scanItemSuccessFragment).commit();
     }
-
-    /**
-     * Utility to determine if the scanner result fragment is showing
-     *
-     * @return True if showing
-     */
-    private boolean isScanResultShowing() {
-        return activity.getFragmentManager().findFragmentById(R.id.fragment_container) instanceof ScanResultFragment;
-    }
-
 
     /**
      * You may prefer using explicit intents for each recognized phrase. This receiver demonstrates that.
      */
-    private ScanItemActivity.MyIntentReceiver myIntentReceiver;
+    private ScanLocationFragment.MyIntentReceiver myIntentReceiver;
 
     public class MyIntentReceiver extends BroadcastReceiver {
         @Override

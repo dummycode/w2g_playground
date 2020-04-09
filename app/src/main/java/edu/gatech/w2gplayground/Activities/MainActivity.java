@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.ApplicationState;
+import edu.gatech.w2gplayground.Models.Generators.UserGenerator;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Voice.TestVoiceCommandReceiver;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandActiv
         }
 
         // If already logged in, go directly to main activity
+        ApplicationState.currentUser = UserGenerator.user();
         if (ApplicationState.currentUser != null) {
             Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(myIntent);

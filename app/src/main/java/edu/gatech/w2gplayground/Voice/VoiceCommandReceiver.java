@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 
+import java.util.List;
+
 import edu.gatech.w2gplayground.Activities.MainActivity;
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Enums.Phrase;
@@ -179,10 +181,28 @@ public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCo
      *
      * @param phrases Array of phrases
      */
-    protected void insertPhrases(Phrase[] phrases) {
+    protected void insertPhrases(List<Phrase> phrases) {
         for (Phrase phrase: phrases) {
             this.sc.insertPhrase(phrase.getPhrase());
         }
+    }
+
+    /**
+     * Method to delete phrases from the library
+     *
+     * @param phrases Array of phrases
+     */
+    protected void removePhrases(List<Phrase> phrases) {
+        for (Phrase phrase: phrases) {
+            this.sc.deletePhrase(phrase.getPhrase());
+        }
+    }
+
+    /**
+     * Method to clear the library
+     */
+    protected void clearPhrases() {
+        throw new UnsupportedOperationException();
     }
 
     protected abstract void handleCommand(String command);

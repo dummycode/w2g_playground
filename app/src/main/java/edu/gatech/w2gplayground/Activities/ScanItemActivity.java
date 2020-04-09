@@ -343,7 +343,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
     /**
      * Update the text from "Listening..." to "Not listening" based on the state
      */
-    private void updateListeningStatusText(boolean isRecognizerActive) {
+    private void updateListeningStatus(boolean isRecognizerActive) {
         if (isRecognizerActive) {
             listeningStatus.setVisibility(View.VISIBLE);
         } else {
@@ -360,7 +360,7 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updateListeningStatusText(isRecognizerActive);
+                updateListeningStatus(isRecognizerActive);
             }
         });
     }

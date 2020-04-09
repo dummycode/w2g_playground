@@ -4,7 +4,9 @@ public enum Phrase {
     TEST("test"),
     SCAN("scan"),
     MANUAL_ENTRY("manual entry"),
-    QUANTITY_OVERRIDE("quantity override");
+    QUANTITY_OVERRIDE("quantity override"),
+    SELECT("select"),
+    HELP("help");
 
     String phrase;
 
