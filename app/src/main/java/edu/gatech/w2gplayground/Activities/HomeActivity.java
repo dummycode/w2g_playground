@@ -20,6 +20,14 @@ public class HomeActivity extends AppCompatActivity {
     PickList[] pickLists = {
             PickListGenerator.pickList(),
             PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
+            PickListGenerator.pickList(),
     };
 
     @Override

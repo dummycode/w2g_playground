@@ -29,7 +29,7 @@
     <string name="activity_picklist__scan_location_instructions">Scan %s location barcode</string>
     <string name="activity_picklist__scan_location_instructions__secondary">Say \"manual\" to manually enter barcode information</string>
 
-    <string name="activity_picklist__scan_items_instructions">Scan %s %s(s)</string>
+    <string name="activity_picklist__scan_items_instructions">Scan %d %s(s)</string>
     <string name="activity_picklist__scan_items_instructions__secondary">Say \"manual override\" to override scanning</string>
 
     <string name="grant_camera_permissions">We need camera permissions.</string>

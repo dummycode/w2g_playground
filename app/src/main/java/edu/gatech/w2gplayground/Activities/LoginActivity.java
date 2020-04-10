@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
     /*
      * Declare variables for UI components
      */
-    private TextView instructions;
+    public TextView instructions;
     private ScannerFragment.Listener2 scannerListener;
     private ImageView resultIcon;
     private ImageView listeningStatus;

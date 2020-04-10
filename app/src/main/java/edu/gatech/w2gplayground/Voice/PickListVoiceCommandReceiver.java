@@ -28,7 +28,7 @@ public class PickListVoiceCommandReceiver extends VoiceCommandReceiver<PickListA
         Log.i("TEST_VOICE_COMMAND", "Command received");
     }
 
-    protected void binConfig() {
+    public void binConfig() {
         // Remove old phrases
         removePhrases(phrases);
         phrases = new LinkedList<>(Arrays.asList(Phrase.SELECT, Phrase.HELP));

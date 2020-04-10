@@ -16,6 +16,9 @@ import edu.gatech.w2gplayground.Activities.PickList.Fragments.BinConfigurationFr
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.NextLocationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanItemsFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanLocationFragment;
+import edu.gatech.w2gplayground.Models.Generators.LineGenerator;
+import edu.gatech.w2gplayground.Models.Line;
+import edu.gatech.w2gplayground.Models.Location;
 import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
@@ -30,12 +33,16 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
     public static final String LOG_TAG = PickListActivity.class.getSimpleName();
     public static final String keyDownAction = "KEY_DOWN";
 
-    TextView instructions, secondaryInstructions;
+    public TextView instructions, secondaryInstructions;
+    private ImageView listeningStatus;
 
     PickList pickList;
     Order[] orders;
 
-    private ImageView listeningStatus;
+    Location currLocation;
+    public String currItemName;
+    public int currQuantity;
+
     PickListVoiceCommandReceiver voiceCommandReceiver;
 
 
@@ -47,9 +54,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
         instructions = findViewById(R.id.instructions);
         secondaryInstructions = findViewById(R.id.secondary_instructions);
 
-        // Not listening
-        listeningStatus = findViewById(R.id.listening);
-        listeningStatus.setVisibility(View.GONE);
 
         // Handle passed in arguments
         Bundle bundle = getIntent().getExtras();
@@ -59,6 +63,19 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
         }
 
         CustomToast.showTopToast(this, pickList.getId());
+
+        // Not listening
+        listeningStatus = findViewById(R.id.listening);
+        listeningStatus.setVisibility(View.GONE);
+
+        try {
+            // Create the voice command receiver class
+            voiceCommandReceiver = new PickListVoiceCommandReceiver(this);
+        } catch (RuntimeException re) {
+            CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
+        }
+
+        // voiceCommandReceiver.binConfig();
 
         // Start out on bin configuration
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
@@ -173,7 +190,14 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
                 .addToBackStack(null)
                 .commit();
 
-        instructions.setText(R.string.activity_picklist__scan_items_instructions);
+        Line[] currLines = { LineGenerator.line(), LineGenerator.line() };
+        currQuantity = 0;
+        for (Line line: currLines) {
+            currQuantity += line.getQuantity();
+        }
+        currItemName = currLines[0].getItem().getName();
+
+        instructions.setText(String.format(getString(R.string.activity_picklist__scan_items_instructions), currQuantity, currItemName));
         secondaryInstructions.setText(R.string.activity_picklist__scan_items_instructions__secondary);
     }
 

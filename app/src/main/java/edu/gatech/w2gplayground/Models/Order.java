@@ -3,13 +3,13 @@ package edu.gatech.w2gplayground.Models;
 import java.util.List;
 
 public class Order extends Model {
-    List<Item> items;
+    private List<Line> lines;
 
-    public Order(List<Item> items) {
-        this.items = items;
+    public Order(List<Line> lines) {
+        this.lines = lines;
     }
 
-    public Item[] getItems() {
-        return (Item []) this.items.toArray();
+    public Line[] getLines() {
+        return (Line []) this.lines.toArray();
     }
 }

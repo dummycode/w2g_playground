@@ -20,6 +20,7 @@ import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
 import com.vuzix.sdk.barcode.ScanningRect;
 
+import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
 import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
@@ -27,7 +28,7 @@ import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 
 /**
- * A fragment to scan the location
+ * A fragment to scan the items at a given location
  */
 public class ScanItemsFragment extends Fragment implements Permissions.Listener {
 
@@ -37,10 +38,15 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
     // UI components
     private ScannerFragment.Listener2 scannerListener;
     private ImageView resultIcon;
-    FragmentActivity activity;
+    private PickListActivity activity;
 
-    // Variables
-    String locationId = "725272730706";
+    private int totalScanned = 0;
+
+    /*
+     * Declare item variables
+     */
+    private String name = "Barcode", upc = "1303C";
+    private int quantity = 1;
 
     /**
      * Inflate the correct layout upon creation
@@ -65,7 +71,7 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
      */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        this.activity = getActivity();
+        this.activity = (PickListActivity) getActivity();
 
         if (this.activity == null) {
             throw new RuntimeException("Activity cannot be null");
@@ -83,7 +89,9 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
         Bundle args = getArguments();
 
         if (args != null) {
-            this.locationId = args.getString("nextLocation");
+            this.name = args.getString("name", "Barcode");
+            this.upc = args.getString("upc", "001");
+            this.quantity = args.getInt("quantity", 1);
         }
 
         this.resultIcon = view.findViewById(R.id.result_icon);
@@ -161,7 +169,7 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
         ScanResult2 result = results[0];
         Log.d(LOG_TAG, result.getText());
 
-        if (result.getText().equals(locationId)) {
+        if (result.getText().equals(upc)) {
             goodScan();
         } else {
             badScan();
@@ -185,6 +193,14 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
         resultIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_check_solid));
         resultIcon.setVisibility(View.VISIBLE);
 
+        totalScanned++;
+
+        if (totalScanned == activity.currQuantity) {
+            doneScanning();
+        }
+
+        activity.instructions.setText(String.format(getString(R.string.activity_picklist__scan_items_instructions), activity.currQuantity - totalScanned, activity.currItemName));
+
         CustomToast.showTopToast(activity, "YAY");
     }
 
@@ -197,7 +213,7 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
 
         Beep.beep(activity);
 
-        CustomToast.showTopToast(activity, "Wrong location!");
+        CustomToast.showTopToast(activity, "Wrong item!");
 
         // Add listener back after one (1) second
         Handler handler = new Handler();

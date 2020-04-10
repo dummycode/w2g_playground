@@ -38,10 +38,10 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
     // UI components
     private ScannerFragment.Listener2 scannerListener;
     private ImageView resultIcon;
-    PickListActivity activity;
+    private PickListActivity activity;
 
     // Variables
-    String locationId = "725272730706";
+    private String locationId = "725272730706";
 
     /**
      * Inflate the correct layout upon creation

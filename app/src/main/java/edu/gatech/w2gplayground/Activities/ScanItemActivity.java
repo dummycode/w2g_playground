@@ -60,12 +60,6 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         // Handle passed in arguments
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle != null) {
-            this.name = bundle.getString("name", "Barcode");
-            this.upc = bundle.getString("upc", "001");
-            this.quantity = bundle.getInt("quantity", 1);
-        }
-
         Permissions permissionsFragment = (Permissions) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
         if (permissionsFragment == null) {
             permissionsFragment = new Permissions();
@@ -74,6 +68,11 @@ public class ScanItemActivity extends AppCompatActivity implements Permissions.L
         // Register as a PermissionsFragment.Listener so our permissionsGranted() is called
         permissionsFragment.setListener(this);
 
+        if (bundle != null) {
+            this.name = bundle.getString("name", "Barcode");
+            this.upc = bundle.getString("upc", "001");
+            this.quantity = bundle.getInt("quantity", 1);
+        }
 
         instructions = findViewById(R.id.instructions);
 
