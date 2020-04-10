@@ -32,6 +32,10 @@
     <string name="activity_picklist__scan_items_instructions">Scan %d %s(s)</string>
     <string name="activity_picklist__scan_items_instructions__secondary">Say \"manual override\" to override scanning</string>
 
+    // Location information fragment instructions
+    <string name="activity_picklist__location_info_instructions">Location %s</string>
+    <string name="activity_picklist__location_info_instructions__secondary">Press or say \"select\" to begin scanning</string>
+
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
     <string name="only_on_mseries">This app can only be used on M-Series devices.</string>

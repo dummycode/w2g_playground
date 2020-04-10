@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.gatech.w2gplayground.Activities.MainActivity;
@@ -37,6 +39,12 @@ public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCo
 
     // Activity from which we are created
     T activity;
+
+    // Valid phrases
+    List<Phrase> phrases = new LinkedList<>();
+
+    // Handler map for different commands
+    HashMap<Phrase, Runnable> handlerMap = new HashMap<>();
 
     /**
      * Constructor which takes care of all speech recognizer registration
@@ -100,7 +108,8 @@ public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCo
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e(MainActivity.LOG_TAG, this.activity.getMethodName());
+        Log.e(LOG_TAG, this.activity.getMethodName());
+
         // All phrases registered with insertPhrase() match ACTION_VOICE_COMMAND as do
         // recognizer status updates
         if (intent.getAction().equals(VuzixSpeechClient.ACTION_VOICE_COMMAND)) {
@@ -125,8 +134,7 @@ public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCo
                     Log.e(MainActivity.LOG_TAG, "Voice Intent not handled");
                 }
             }
-        }
-        else {
+        } else {
             Log.e(MainActivity.LOG_TAG, "Other Intent not handled " + intent.getAction() );
         }
     }
@@ -202,7 +210,7 @@ public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCo
      * Method to clear the library
      */
     protected void clearPhrases() {
-        throw new UnsupportedOperationException();
+        this.sc.deletePhrase("*");
     }
 
     protected abstract void handleCommand(String command);

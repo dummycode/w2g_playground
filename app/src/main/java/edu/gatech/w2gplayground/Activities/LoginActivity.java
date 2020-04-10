@@ -25,6 +25,7 @@ import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Voice.LoginVoiceCommandReceiver;
 
+import static edu.gatech.w2gplayground.R.layout.activity_login;
 import static edu.gatech.w2gplayground.R.layout.activity_scan_item;
 
 public class LoginActivity extends AppCompatActivity implements Permissions.Listener, VoiceCommandActivity {
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(activity_scan_item);
+        setContentView(activity_login);
 
         Permissions permissionsFragment = (Permissions) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
         if (permissionsFragment == null) {

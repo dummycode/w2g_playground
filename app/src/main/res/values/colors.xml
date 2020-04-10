@@ -8,4 +8,5 @@
     <color name="primaryText">#2C2D4A</color>
     <color name="textOnDarkBg">#A6A7AE</color>
     <color name="w2gGreen">#077C79</color>
+    <color name="w2gHeading">#E57016</color>
 </resources>

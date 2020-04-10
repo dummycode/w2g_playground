@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.BinConfigurationFragment;
+import edu.gatech.w2gplayground.Activities.PickList.Fragments.LocationInfoFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.NextLocationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanItemsFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanLocationFragment;
@@ -72,10 +73,11 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
             // Create the voice command receiver class
             voiceCommandReceiver = new PickListVoiceCommandReceiver(this);
         } catch (RuntimeException re) {
+            Log.d(LOG_TAG, re.getMessage());
             CustomToast.showTopToast(this, getString(R.string.only_on_mseries));
         }
 
-        // voiceCommandReceiver.binConfig();
+        voiceCommandReceiver.binConfig();
 
         // Start out on bin configuration
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
@@ -182,6 +184,32 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
     public void scanLocationDone() {
         CustomToast.showTopToast(this, "Scanned Location");
 
+        // Move to location info
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(fragmentContainer.getId(), new LocationInfoFragment())
+                .addToBackStack(null)
+                .commit();
+
+        // Set info for current location
+        Line[] currLines = { LineGenerator.line(), LineGenerator.line() };
+        currQuantity = 0;
+        for (Line line: currLines) {
+            currQuantity += line.getQuantity();
+        }
+        currItemName = currLines[0].getItem().getName();
+
+        instructions.setText(R.string.activity_picklist__location_info_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__location_info_instructions__secondary);
+    }
+
+    /**
+     * Handler for when item information is done
+     */
+    public void locationInfoDone() {
+        CustomToast.showTopToast(this, "Location info done");
+
         // Move to scan items
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         getSupportFragmentManager()
@@ -190,22 +218,8 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
                 .addToBackStack(null)
                 .commit();
 
-        Line[] currLines = { LineGenerator.line(), LineGenerator.line() };
-        currQuantity = 0;
-        for (Line line: currLines) {
-            currQuantity += line.getQuantity();
-        }
-        currItemName = currLines[0].getItem().getName();
-
         instructions.setText(String.format(getString(R.string.activity_picklist__scan_items_instructions), currQuantity, currItemName));
         secondaryInstructions.setText(R.string.activity_picklist__scan_items_instructions__secondary);
-    }
-
-    /**
-     * Handler for when items have been scanned
-     */
-    public void locationInfoDone() {
-
     }
 
     /**
@@ -217,5 +231,23 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
         // If done, go to results screen
 
         // Else, go to next location
+    }
+
+    /*
+     * Helper methods for different fragments
+     */
+
+    /**
+     * Bin configuration help
+     */
+    public void binConfigurationHelp() {
+        CustomToast.showTopToast(this, "Bin configuration help");
+    }
+
+    /*
+     * Next location help
+     */
+    public void nextLocationHelp() {
+        CustomToast.showTopToast(this, "Next location help");
     }
 }

@@ -6,7 +6,8 @@ public enum Phrase {
     MANUAL_ENTRY("manual entry"),
     QUANTITY_OVERRIDE("quantity override"),
     SELECT("select"),
-    HELP("help");
+    HELP("help"),
+    REFRESH("refresh");
 
     String phrase;
 

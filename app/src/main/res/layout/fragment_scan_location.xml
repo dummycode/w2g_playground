@@ -7,29 +7,21 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/outer"
+    <FrameLayout
+        android:id="@+id/scan_location_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/result_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="100dp">
-
-        <FrameLayout
-            android:id="@+id/scan_location_container"
-            android:layout_height="300dp"
-            android:layout_width="400dp"
-            android:layout_gravity="center" />
-
-        <ImageView
-            android:id="@+id/result_icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/ic_check_solid" />
-    </RelativeLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@drawable/ic_check_solid" />
 
 </RelativeLayout>
 

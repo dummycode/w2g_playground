@@ -1,65 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/w2gGreen">
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/id_title"
+        <RelativeLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:gravity="center_vertical"
-            android:text="@string/activity_home__id_title"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/hud_white"
-            app:layout_constraintEnd_toEndOf="@+id/order_count_title"
-            tools:text="@string/activity_home__id_title" />
+            android:layout_marginTop="0dp"
+            android:background="@color/w2gGreen">
 
-        <TextView
-            android:id="@+id/assigned_at_title"
+            <TextView
+                android:id="@+id/id_title"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:text="@string/activity_home__id_title"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/hud_white"
+                app:layout_constraintEnd_toEndOf="@+id/order_count_title"
+                tools:text="@string/activity_home__id_title" />
+
+            <TextView
+                android:id="@+id/assigned_at_title"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:text="@string/activity_home__assigned_at_title"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/hud_white"
+                tools:text="@string/activity_home__assigned_at_title" />
+
+            <TextView
+                android:id="@+id/order_count_title"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical|end"
+                android:text="@string/activity_home__order_count_title"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/hud_white"
+                android:textAlignment="textEnd"
+                tools:text="@string/activity_home__order_count_title" />
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/picklists"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:gravity="center"
-            android:text="@string/activity_home__assigned_at_title"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/hud_white"
-            tools:text="@string/activity_home__assigned_at_title" />
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/order_count_title"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:gravity="center_vertical|end"
-            android:text="@string/activity_home__order_count_title"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/hud_white"
-            android:textAlignment="textEnd"
-            tools:text="@string/activity_home__order_count_title" />
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/picklists"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+    <ImageView
+        android:id="@+id/listening"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/activity_main__listening_status__yes"
+        android:visibility="visible"
+        app:srcCompat="@drawable/ic_microphone_solid" />
+</RelativeLayout>
