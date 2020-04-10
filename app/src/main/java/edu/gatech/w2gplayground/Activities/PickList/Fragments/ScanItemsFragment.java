@@ -237,6 +237,8 @@ public class ScanItemsFragment extends Fragment {
      */
     private void doneScanning() {
         resultIcon.setVisibility(View.GONE);
+
+        activity.scanItemsDone();
     }
 
     /**

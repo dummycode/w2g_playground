@@ -11,19 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.R;
-import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 /**
- * A fragment to show the item information for a given location
+ * A fragment to show the summary
  */
-public class LocationInfoFragment extends Fragment {
-
-    private PickListActivity activity;
+public class SummaryFragment extends Fragment {
 
     /**
      * Inflate the correct layout upon creation
@@ -41,40 +37,34 @@ public class LocationInfoFragment extends Fragment {
         BroadcastReceiver receiver = new KeyBroadcastReceiver();
         getContext().registerReceiver(receiver, new IntentFilter(PickListActivity.keyDownAction));
 
-        return inflater.inflate(R.layout.fragment_location_info, container, false);
+        return inflater.inflate(R.layout.fragment_picklist_summary, container, false);
     }
 
     /**
-     * Once our view is created, we will show the image with the scan result
+     * Once our view is created, we will show the summary page
      *
      * @param view - The new view
      * @param savedInstanceState - required argument that we ignore
      */
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        activity = (PickListActivity) getActivity();
-
-        if (activity == null) {
-            throw new RuntimeException("Activity cannot be null");
-        }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
     }
 
     public class KeyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Ignore if this fragment is not on the screen
-            if (!(getFragmentManager().findFragmentById(R.id.fragment_container) instanceof LocationInfoFragment)) {
+            if (!(getFragmentManager().findFragmentById(R.id.fragment_container) instanceof SummaryFragment)) {
                 return;
             }
 
             int keyCode = intent.getIntExtra("KEY_CODE", 0);
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                activity.locationInfoDone();
+                ((PickListActivity) getActivity()).summaryDone();
             }
         }
     }
 }
-
 
 

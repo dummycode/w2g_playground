@@ -32,9 +32,14 @@
     <string name="activity_picklist__scan_items_instructions">Scan %d %s(s)</string>
     <string name="activity_picklist__scan_items_instructions__secondary">Say \"manual override\" to override scanning</string>
 
-    // Location information fragment instructions
-    <string name="activity_picklist__location_info_instructions">Location %s</string>
-    <string name="activity_picklist__location_info_instructions__secondary">Press or say \"select\" to begin scanning</string>
+    // Location information fragment
+    <string name="activity_picklist__location_info__title">Location %s</string>
+    <string name="activity_picklist__location_info__instructions_secondary">Press or say \"select\" to begin scanning</string>
+
+    // Pick List summary page
+    <string name="activity_picklist__summary__title">Picklist %s completed!</string>
+    <string name="activity_picklist__summary__next_steps">Summary of items picked</string>
+    <string name="activity_picklist__summary_instructions__secondary">Press or say \"select\" to return to home screen</string>
 
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
