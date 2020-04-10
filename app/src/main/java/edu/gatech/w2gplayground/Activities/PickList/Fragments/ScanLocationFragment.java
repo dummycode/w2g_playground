@@ -93,6 +93,13 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
         createScannerListener();
     }
 
+    public void onStop() {
+        super.onStop();
+
+        ScannerFragment scannerFragment = (ScannerFragment) activity.getFragmentManager().findFragmentById(R.id.scan_location_container);
+        scannerFragment.setListener2(null);
+    }
+
     /**
      * Show the scanner when camera permissions were granted
      */

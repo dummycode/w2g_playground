@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
@@ -22,7 +21,6 @@ import com.vuzix.sdk.barcode.ScanningRect;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
-import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 
@@ -30,7 +28,7 @@ import edu.gatech.w2gplayground.Utilities.CustomToast;
 /**
  * A fragment to scan the items at a given location
  */
-public class ScanItemsFragment extends Fragment implements Permissions.Listener {
+public class ScanItemsFragment extends Fragment {
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
     public static final String LOG_TAG = ScanItemsFragment.class.getSimpleName();
@@ -45,7 +43,7 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
     /*
      * Declare item variables
      */
-    private String name = "Barcode", upc = "1303C";
+    private String name = "Barcode", upc = "012345678905";
     private int quantity = 1;
 
     /**
@@ -64,7 +62,7 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
     }
 
     /**
-     * Once our view is created, we will show the scan location fragment
+     * Once our view is created, we will show the scan items fragment
      *
      * @param view - The new view
      * @param savedInstanceState - required argument that we ignore
@@ -76,14 +74,6 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
         if (this.activity == null) {
             throw new RuntimeException("Activity cannot be null");
         }
-
-        Permissions permissionsFragment = (Permissions) activity.getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
-        if (permissionsFragment == null) {
-            permissionsFragment = new Permissions();
-            activity.getFragmentManager().beginTransaction().add(permissionsFragment, TAG_PERMISSIONS_FRAGMENT).commit();
-        }
-        // Register as a PermissionsFragment.Listener so our permissionsGranted() is called
-        permissionsFragment.setListener(this);
 
         // Handle passed in arguments
         Bundle args = getArguments();
@@ -98,16 +88,12 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
         this.resultIcon.setVisibility(View.GONE);
 
         createScannerListener();
-    }
-
-    /**
-     * Show the scanner when camera permissions were granted
-     */
-    @Override
-    public void permissionsGranted() {
         showScanner();
     }
 
+    /**
+     * Show the scanner
+     */
     private void showScanner() {
         try {
             ScannerFragment scannerFragment = new ScannerFragment();
@@ -195,13 +181,31 @@ public class ScanItemsFragment extends Fragment implements Permissions.Listener 
 
         totalScanned++;
 
-        if (totalScanned == activity.currQuantity) {
-            doneScanning();
-        }
-
         activity.instructions.setText(String.format(getString(R.string.activity_picklist__scan_items_instructions), activity.currQuantity - totalScanned, activity.currItemName));
 
-        CustomToast.showTopToast(activity, "YAY");
+        if (totalScanned == activity.currQuantity) {
+            // All done!
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doneScanning();
+                }
+            }, 500);
+        } else {
+            // Add listener back after two (2) seconds
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ScannerFragment scannerFragment = (ScannerFragment) activity.getFragmentManager().findFragmentById(R.id.scan_item_container);
+                    scannerFragment.setListener2(scannerListener);
+
+                    resultIcon.setVisibility(View.GONE);
+                }
+            }, 2000);
+        }
+
     }
 
     /**
