@@ -24,8 +24,8 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="500dp"
-        android:layout_height="281.25dp"
+        android:layout_width="400dp"
+        android:layout_height="300dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         tools:layout_centerHorizontal="true">

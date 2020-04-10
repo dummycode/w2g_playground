@@ -20,7 +20,6 @@ import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
 import com.vuzix.sdk.barcode.ScanningRect;
 
-import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
 import edu.gatech.w2gplayground.Permissions.Permissions;
 import edu.gatech.w2gplayground.R;
@@ -30,15 +29,15 @@ import edu.gatech.w2gplayground.Utilities.CustomToast;
 /**
  * A fragment to scan the location
  */
-public class ScanLocationFragment extends Fragment implements Permissions.Listener {
+public class ScanItemsFragment extends Fragment implements Permissions.Listener {
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
-    public static final String LOG_TAG = ScanLocationFragment.class.getSimpleName();
+    public static final String LOG_TAG = ScanItemsFragment.class.getSimpleName();
 
     // UI components
     private ScannerFragment.Listener2 scannerListener;
     private ImageView resultIcon;
-    PickListActivity activity;
+    FragmentActivity activity;
 
     // Variables
     String locationId = "725272730706";
@@ -55,7 +54,7 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scan_location, container, false);
+        return inflater.inflate(R.layout.fragment_scan_items, container, false);
     }
 
     /**
@@ -66,7 +65,7 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
      */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        this.activity = (PickListActivity) getActivity();
+        this.activity = getActivity();
 
         if (this.activity == null) {
             throw new RuntimeException("Activity cannot be null");
@@ -111,7 +110,7 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
 
             scannerFragment.setArguments(args);
 
-            activity.getFragmentManager().beginTransaction().replace(R.id.scan_location_container, scannerFragment).commit();
+            activity.getFragmentManager().beginTransaction().replace(R.id.scan_item_container, scannerFragment).commit();
             scannerFragment.setListener2(scannerListener);
         } catch (RuntimeException re) {
             CustomToast.showTopToast(activity, getString(R.string.only_on_mseries));
@@ -156,7 +155,7 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
      * @param results an array of ScanResult
      */
     private void onScanFragmentScanResult(Bitmap bitmap, ScanResult2[] results) {
-        ScannerFragment scannerFragment = (ScannerFragment) activity.getFragmentManager().findFragmentById(R.id.scan_location_container);
+        ScannerFragment scannerFragment = (ScannerFragment) activity.getFragmentManager().findFragmentById(R.id.scan_item_container);
         scannerFragment.setListener2(null);
 
         ScanResult2 result = results[0];
@@ -186,7 +185,7 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
         resultIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_check_solid));
         resultIcon.setVisibility(View.VISIBLE);
 
-        activity.scanLocationDone();
+        CustomToast.showTopToast(activity, "YAY");
     }
 
     /**
@@ -205,7 +204,7 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ScannerFragment scannerFragment = (ScannerFragment) activity.getFragmentManager().findFragmentById(R.id.scan_location_container);
+                ScannerFragment scannerFragment = (ScannerFragment) activity.getFragmentManager().findFragmentById(R.id.scan_item_container);
                 scannerFragment.setListener2(scannerListener);
 
                 resultIcon.setVisibility(View.GONE);

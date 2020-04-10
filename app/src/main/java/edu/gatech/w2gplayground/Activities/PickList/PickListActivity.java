@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.BinConfigurationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.NextLocationFragment;
+import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanItemsFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanLocationFragment;
 import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
@@ -71,42 +72,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
         secondaryInstructions.setText(R.string.activity_picklist__bin_instructions__secondary);
     }
 
-    public void binConfiguationDone() {
-        CustomToast.showTopToast(this, "Bins configured!");
-
-        // Move on to next location
-        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(fragmentContainer.getId(), new NextLocationFragment())
-                .addToBackStack(null)
-                .commit();
-
-        instructions.setText(R.string.activity_picklist__next_location_instructions);
-        secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
-    }
-
-    /**
-     * Handler for when next location fragment is done
-     */
-    public void nextLocationDone() {
-        CustomToast.showTopToast(this, "At location");
-
-        // Move to scan location
-        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(fragmentContainer.getId(), new ScanLocationFragment())
-                .addToBackStack(null)
-                .commit();
-
-        instructions.setText(R.string.activity_picklist__scan_location_instructions);
-        secondaryInstructions.setText(R.string.activity_picklist__scan_location_instructions__secondary);
-    }
-
-    public void scanLocationDone() {
-        CustomToast.showTopToast(this, "Scanned Location");
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -152,5 +117,81 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      */
     public String getMethodName() {
         return LOG_TAG + ":" + this.getClass().getSimpleName() + "." + new Throwable().getStackTrace()[1].getMethodName();
+    }
+
+    /*
+     * Handlers for when different stages of the pick process are completed
+     */
+
+    /**
+     * Handler for when bin configuration is complete
+     */
+    public void binConfiguationDone() {
+        CustomToast.showTopToast(this, "Bins configured!");
+
+        // Move on to next location
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(fragmentContainer.getId(), new NextLocationFragment())
+                .addToBackStack(null)
+                .commit();
+
+        instructions.setText(R.string.activity_picklist__next_location_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
+    }
+
+    /**
+     * Handler for when next location fragment is done
+     */
+    public void nextLocationDone() {
+        CustomToast.showTopToast(this, "At location");
+
+        // Move to scan location
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(fragmentContainer.getId(), new ScanLocationFragment())
+                .addToBackStack(null)
+                .commit();
+
+        instructions.setText(R.string.activity_picklist__scan_location_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__scan_location_instructions__secondary);
+    }
+
+    /**
+     * Handler for when a location has been scanned
+     */
+    public void scanLocationDone() {
+        CustomToast.showTopToast(this, "Scanned Location");
+
+        // Move to scan items
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(fragmentContainer.getId(), new ScanItemsFragment())
+                .addToBackStack(null)
+                .commit();
+
+        instructions.setText(R.string.activity_picklist__scan_items_instructions);
+        secondaryInstructions.setText(R.string.activity_picklist__scan_items_instructions__secondary);
+    }
+
+    /**
+     * Handler for when items have been scanned
+     */
+    public void locationInfoDone() {
+
+    }
+
+    /**
+     * Handler for when items have been scanned
+     */
+    public void scanItemsDone() {
+        CustomToast.showTopToast(this, "Items have been scanned!");
+
+        // If done, go to results screen
+
+        // Else, go to next location
     }
 }

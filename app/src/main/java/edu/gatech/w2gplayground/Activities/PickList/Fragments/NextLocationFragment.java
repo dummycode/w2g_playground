@@ -63,6 +63,11 @@ public class NextLocationFragment extends Fragment {
     public class KeyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // Ignore if this fragment is not on the screen
+            if (!(getFragmentManager().findFragmentById(R.id.fragment_container) instanceof NextLocationFragment)) {
+                return;
+            }
+
             int keyCode = intent.getIntExtra("KEY_CODE", 0);
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
