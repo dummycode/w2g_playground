@@ -35,6 +35,10 @@
     // Location information fragment
     <string name="activity_picklist__location_info__title">Location %s</string>
     <string name="activity_picklist__location_info__instructions_secondary">Press or say \"select\" to begin scanning</string>
+    <string name="activity_picklist__location_info__order_title">Order %d</string>
+    <string name="activity_picklist__location_info__order_quantity">%d</string>
+    <string name="activity_picklist__location_info__item_name">%s</string>
+
 
     // Pick List summary page
     <string name="activity_picklist__summary__title">Picklist %s completed!</string>

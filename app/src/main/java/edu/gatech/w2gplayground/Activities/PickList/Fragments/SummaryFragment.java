@@ -10,16 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
+import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
 
 /**
  * A fragment to show the summary
  */
 public class SummaryFragment extends Fragment {
+    private PickListActivity activity;
+
+    TextView title;
 
     /**
      * Inflate the correct layout upon creation
@@ -48,6 +53,17 @@ public class SummaryFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        activity = (PickListActivity) getActivity();
+
+        if (activity == null) {
+            throw new RuntimeException("Activity cannot be null");
+        }
+
+        PickList pickList = (PickList) getArguments().getSerializable("pickList");
+
+        title = activity.findViewById(R.id.summary_title);
+        title.setText(String.format(getString(R.string.activity_picklist__summary__title), pickList.getId()));
+
     }
 
     public class KeyBroadcastReceiver extends BroadcastReceiver {

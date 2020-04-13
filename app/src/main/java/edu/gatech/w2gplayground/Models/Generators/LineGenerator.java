@@ -14,4 +14,11 @@ public class LineGenerator extends Generator {
 
         return new Line(item, quantity);
     }
+
+    public static Line withQuantity(int quantity) {
+        Line line = line();
+        line.setQuantity(quantity);
+
+        return line;
+    }
 }

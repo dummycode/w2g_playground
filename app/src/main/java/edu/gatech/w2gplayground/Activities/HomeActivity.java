@@ -11,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
+import edu.gatech.w2gplayground.ApplicationState;
 import edu.gatech.w2gplayground.Fragments.Home.PickListItemAdaptor;
 import edu.gatech.w2gplayground.Models.Generators.PickListGenerator;
 import edu.gatech.w2gplayground.Models.PickList;
@@ -31,7 +33,6 @@ public class HomeActivity extends AppCompatActivity implements VoiceCommandActiv
     // UI components
     private ImageView listeningStatus;
 
-    List<PickList> pickLists = new ArrayList<>();
     HomeVoiceCommandReceiver voiceCommandReceiver;
 
     @Override
@@ -39,11 +40,25 @@ public class HomeActivity extends AppCompatActivity implements VoiceCommandActiv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        pickLists.add(PickListGenerator.pickList());
-        pickLists.add(PickListGenerator.pickList());
-        pickLists.add(PickListGenerator.pickList());
+        if (ApplicationState.pickLists == null) {
+            ApplicationState.pickLists = new ArrayList<>();
 
-        PickListItemAdaptor adapter = new PickListItemAdaptor(this, pickLists.toArray(new PickList[0]));
+            // Add three random picklists
+            ApplicationState.pickLists.add(PickListGenerator.pickList());
+            ApplicationState.pickLists.add(PickListGenerator.pickList());
+            ApplicationState.pickLists.add(PickListGenerator.pickList());
+        }
+
+        Bundle args = getIntent().getExtras();
+
+        if (args != null) {
+            int completedId = args.getInt("completedId", -1);
+            if (completedId != -1) {
+                ApplicationState.pickLists.remove(completedId);
+            }
+        }
+
+        PickListItemAdaptor adapter = new PickListItemAdaptor(this, ApplicationState.pickLists.toArray(new PickList[0]));
 
         ListView listView = findViewById(R.id.picklists);
         listView.setAdapter(adapter);
@@ -73,7 +88,8 @@ public class HomeActivity extends AppCompatActivity implements VoiceCommandActiv
      */
     public void handleItemClick(int position) {
         Intent myIntent = new Intent(HomeActivity.this, PickListActivity.class);
-        myIntent.putExtra("pickList", pickLists.get(position));
+        myIntent.putExtra("pickList", ApplicationState.pickLists.get(position));
+        myIntent.putExtra("pickListId", position);
 
         startActivity(myIntent);
     }
@@ -82,10 +98,10 @@ public class HomeActivity extends AppCompatActivity implements VoiceCommandActiv
      * Handles a refresh command
      */
     public void refresh() {
-        pickLists = new ArrayList<>();
-        pickLists.add(PickListGenerator.pickList());
+        ApplicationState.pickLists = new ArrayList<>();
+        ApplicationState.pickLists.add(PickListGenerator.pickList());
 
-        PickListItemAdaptor adapter = new PickListItemAdaptor(this, pickLists.toArray(new PickList[0]));
+        PickListItemAdaptor adapter = new PickListItemAdaptor(this, ApplicationState.pickLists.toArray(new PickList[0]));
 
         ListView listView = findViewById(R.id.picklists);
         listView.setAdapter(adapter);

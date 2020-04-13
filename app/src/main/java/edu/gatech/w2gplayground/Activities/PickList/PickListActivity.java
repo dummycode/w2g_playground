@@ -41,7 +41,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
     private ImageView listeningStatus;
 
     PickList pickList;
-    Order[] orders;
 
     Location currLocation;
     public String currItemName;
@@ -194,11 +193,18 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      * Handler for when a location has been scanned
      */
     public void scanLocationDone() {
-        CustomToast.showTopToast(this, "Scanned Location");
+        // Set info for current location
+        Line[] currLines = { LineGenerator.line(), LineGenerator.line() };
+        currQuantity = 0;
+        for (Line line: currLines) {
+            currQuantity += line.getQuantity();
+        }
+        currItemName = currLines[0].getItem().getName();
 
         // Move to location info
         Bundle args = new Bundle();
         args.putSerializable("location", currLocation);
+        args.putString("itemName", currItemName);
 
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         LocationInfoFragment locationInfoFragment = new LocationInfoFragment();
@@ -209,14 +215,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
                 .replace(fragmentContainer.getId(), locationInfoFragment)
                 .addToBackStack(null)
                 .commit();
-
-        // Set info for current location
-        Line[] currLines = { LineGenerator.line(), LineGenerator.line() };
-        currQuantity = 0;
-        for (Line line: currLines) {
-            currQuantity += line.getQuantity();
-        }
-        currItemName = currLines[0].getItem().getName();
 
         instructions.setVisibility(View.GONE);
         secondaryInstructions.setText(R.string.activity_picklist__location_info__instructions_secondary);
@@ -249,11 +247,17 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
 
         // If done, go to results screen
         if (true) {
+            Bundle args = new Bundle();
+            args.putSerializable("pickList", pickList);
+
+            SummaryFragment locationInfoFragment = new SummaryFragment();
+            locationInfoFragment.setArguments(args);
+
             // Move to summary
             FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(fragmentContainer.getId(), new SummaryFragment())
+                    .replace(fragmentContainer.getId(), locationInfoFragment)
                     .addToBackStack(null)
                     .commit();
 
@@ -272,6 +276,8 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
         // so we can remove it from the list
         Intent myIntent = new Intent(PickListActivity.this, HomeActivity.class);
         myIntent.putExtra("completedId", pickListId);
+
+        System.out.println(pickListId);
 
         startActivity(myIntent);
     }

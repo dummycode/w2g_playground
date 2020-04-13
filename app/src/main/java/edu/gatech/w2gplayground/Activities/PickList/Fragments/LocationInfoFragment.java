@@ -9,16 +9,18 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
+import edu.gatech.w2gplayground.Models.Generators.LineGenerator;
+import edu.gatech.w2gplayground.Models.Line;
 import edu.gatech.w2gplayground.Models.Location;
 import edu.gatech.w2gplayground.R;
-import edu.gatech.w2gplayground.Utilities.CustomToast;
 
 /**
  * A fragment to show the item information for a given location
@@ -29,6 +31,9 @@ public class LocationInfoFragment extends Fragment {
     private Location location;
 
     private TextView title;
+    private TextView itemName;
+
+    String currItemName;
 
     /**
      * Inflate the correct layout upon creation
@@ -59,19 +64,33 @@ public class LocationInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         activity = (PickListActivity) getActivity();
 
+        if (activity == null) {
+            throw new RuntimeException("Activity cannot be null");
+        }
+
         Bundle args = getArguments();
         if (args != null) {
             location = (Location) args.getSerializable("location");
+            currItemName = args.getString("itemName");
         }
 
         title = activity.findViewById(R.id.location_info_title);
         title.setText(String.format(getString(R.string.activity_picklist__location_info__title), location.getName()));
 
+        itemName = activity.findViewById(R.id.item_id);
+        itemName.setText(String.format(getString(R.string.activity_picklist__location_info__item_name), currItemName));
 
 
-        if (activity == null) {
-            throw new RuntimeException("Activity cannot be null");
-        }
+        Line[] lines = { LineGenerator.line(), LineGenerator.withQuantity(2) };
+        LocationInfoOrderItemAdaptor adapter = new LocationInfoOrderItemAdaptor(activity, lines);
+
+        ListView listView = activity.findViewById(R.id.orders);
+        listView.setAdapter(adapter);
+
+        // Focus on list view
+//        listView.requestFocus();
+
+        listView.setOnItemClickListener((parent, _view, position, id) -> handleItemClick(position));
     }
 
     public class KeyBroadcastReceiver extends BroadcastReceiver {
@@ -88,6 +107,15 @@ public class LocationInfoFragment extends Fragment {
                 activity.locationInfoDone();
             }
         }
+    }
+
+    /**
+     * Handles row item being clicked
+     *
+     * @param position that was clicked
+     */
+    private void handleItemClick(int position) {
+        // Do nothing
     }
 }
 

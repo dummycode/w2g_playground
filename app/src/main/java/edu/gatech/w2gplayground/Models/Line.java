@@ -18,4 +18,12 @@ public class Line implements Serializable {
     public Item getItem() {
         return item;
     }
+
+    public String getId() {
+        return "id";
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
