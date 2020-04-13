@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
@@ -37,6 +39,7 @@ public class ScanItemsFragment extends Fragment {
     private ScannerFragment.Listener2 scannerListener;
     private ImageView resultIcon;
     private PickListActivity activity;
+    FrameLayout binPlacementFragmentContainer;
 
     private int totalScanned = 0;
 
@@ -86,6 +89,16 @@ public class ScanItemsFragment extends Fragment {
 
         this.resultIcon = view.findViewById(R.id.result_icon);
         this.resultIcon.setVisibility(View.GONE);
+
+        // Start out on bin configuration
+        binPlacementFragmentContainer = activity.findViewById(R.id.bin_placement_container);
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(binPlacementFragmentContainer.getId(), new BinPlacementFragment())
+                .addToBackStack(null)
+                .commit();
+
+        binPlacementFragmentContainer.setVisibility(View.GONE);
 
         createScannerListener();
         showScanner();
@@ -179,6 +192,8 @@ public class ScanItemsFragment extends Fragment {
         resultIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_check_solid));
         resultIcon.setVisibility(View.VISIBLE);
 
+        binPlacementFragmentContainer.setVisibility(View.VISIBLE);
+
         totalScanned++;
 
         activity.instructions.setText(String.format(getString(R.string.activity_picklist__scan_items_instructions), activity.currQuantity - totalScanned, activity.currItemName));
@@ -191,7 +206,7 @@ public class ScanItemsFragment extends Fragment {
                 public void run() {
                     doneScanning();
                 }
-            }, 500);
+            }, 2000);
         } else {
             // Add listener back after two (2) seconds
             Handler handler = new Handler();
@@ -202,6 +217,8 @@ public class ScanItemsFragment extends Fragment {
                     scannerFragment.setListener2(scannerListener);
 
                     resultIcon.setVisibility(View.GONE);
+
+                    binPlacementFragmentContainer.setVisibility(View.GONE);
                 }
             }, 2000);
         }

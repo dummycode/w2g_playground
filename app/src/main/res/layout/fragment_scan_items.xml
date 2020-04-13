@@ -13,6 +13,16 @@
         android:layout_width="match_parent"
         android:layout_gravity="center" />
 
+    <FrameLayout
+        android:id="@+id/bin_placement_container"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp">
+    </FrameLayout>
+
     <ImageView
         android:id="@+id/result_icon"
         android:layout_width="100dp"
