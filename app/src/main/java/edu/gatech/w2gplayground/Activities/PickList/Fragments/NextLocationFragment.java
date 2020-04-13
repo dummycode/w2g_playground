@@ -14,12 +14,15 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
+import edu.gatech.w2gplayground.Models.Location;
 import edu.gatech.w2gplayground.R;
 
 /**
  * A fragment to show the next location
  */
 public class NextLocationFragment extends Fragment {
+
+    private Location location;
 
     /**
      * Inflate the correct layout upon creation
@@ -50,14 +53,13 @@ public class NextLocationFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         Bundle args = getArguments();
-        String nextLocation = "LOC-01";
 
         if (args != null) {
-            nextLocation = args.getString("nextLocation");
+            location = (Location) args.getSerializable("location");
         }
 
         TextView nextLocationText = view.findViewById(R.id.next_location);
-        nextLocationText.setText(nextLocation);
+        nextLocationText.setText(location.getName());
     }
 
     public class KeyBroadcastReceiver extends BroadcastReceiver {

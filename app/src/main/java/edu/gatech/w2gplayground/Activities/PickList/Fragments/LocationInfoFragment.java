@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
+import edu.gatech.w2gplayground.Models.Location;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 
@@ -24,6 +26,9 @@ import edu.gatech.w2gplayground.Utilities.CustomToast;
 public class LocationInfoFragment extends Fragment {
 
     private PickListActivity activity;
+    private Location location;
+
+    private TextView title;
 
     /**
      * Inflate the correct layout upon creation
@@ -53,6 +58,16 @@ public class LocationInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         activity = (PickListActivity) getActivity();
+
+        Bundle args = getArguments();
+        if (args != null) {
+            location = (Location) args.getSerializable("location");
+        }
+
+        title = activity.findViewById(R.id.location_info_title);
+        title.setText(String.format(getString(R.string.activity_picklist__location_info__title), location.getName()));
+
+
 
         if (activity == null) {
             throw new RuntimeException("Activity cannot be null");

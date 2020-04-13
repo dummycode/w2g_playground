@@ -20,6 +20,7 @@ import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanItemsFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.ScanLocationFragment;
 import edu.gatech.w2gplayground.Activities.PickList.Fragments.SummaryFragment;
 import edu.gatech.w2gplayground.Models.Generators.LineGenerator;
+import edu.gatech.w2gplayground.Models.Generators.LocationGenerator;
 import edu.gatech.w2gplayground.Models.Line;
 import edu.gatech.w2gplayground.Models.Location;
 import edu.gatech.w2gplayground.Models.Order;
@@ -150,13 +151,22 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      * Handler for when bin configuration is complete
      */
     public void binConfiguationDone() {
-        CustomToast.showTopToast(this, "Bins configured!");
+        voiceCommandReceiver.clearPhrases();
 
         // Move on to next location
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+
+        currLocation = LocationGenerator.location();
+
+        Bundle args = new Bundle();
+        args.putSerializable("location", currLocation);
+
+        NextLocationFragment nextLocationFragment = new NextLocationFragment();
+        nextLocationFragment.setArguments(args);
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(fragmentContainer.getId(), new NextLocationFragment())
+                .replace(fragmentContainer.getId(), nextLocationFragment)
                 .addToBackStack(null)
                 .commit();
 
@@ -168,8 +178,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      * Handler for when next location fragment is done
      */
     public void nextLocationDone() {
-        CustomToast.showTopToast(this, "At location");
-
         // Move to scan location
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         getSupportFragmentManager()
@@ -178,7 +186,7 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
                 .addToBackStack(null)
                 .commit();
 
-        instructions.setText(R.string.activity_picklist__scan_location_instructions);
+        instructions.setText(String.format(getString(R.string.activity_picklist__scan_location_instructions), currLocation.getName()));
         secondaryInstructions.setText(R.string.activity_picklist__scan_location_instructions__secondary);
     }
 
@@ -189,10 +197,16 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
         CustomToast.showTopToast(this, "Scanned Location");
 
         // Move to location info
+        Bundle args = new Bundle();
+        args.putSerializable("location", currLocation);
+
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        LocationInfoFragment locationInfoFragment = new LocationInfoFragment();
+        locationInfoFragment.setArguments(args);
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(fragmentContainer.getId(), new LocationInfoFragment())
+                .replace(fragmentContainer.getId(), locationInfoFragment)
                 .addToBackStack(null)
                 .commit();
 

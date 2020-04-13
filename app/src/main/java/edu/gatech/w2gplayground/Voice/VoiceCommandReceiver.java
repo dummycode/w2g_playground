@@ -209,7 +209,7 @@ public abstract class VoiceCommandReceiver<T extends AppCompatActivity & VoiceCo
     /**
      * Method to clear the library
      */
-    protected void clearPhrases() {
+    public void clearPhrases() {
         this.sc.deletePhrase("*");
     }
 
