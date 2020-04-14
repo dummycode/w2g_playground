@@ -85,8 +85,6 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
         }
 
         createScannerListener();
-
-        Log.d(LOG_TAG, user.getAuthKey());
     }
 
     /**

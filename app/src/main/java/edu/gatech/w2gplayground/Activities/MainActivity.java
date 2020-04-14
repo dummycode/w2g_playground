@@ -132,12 +132,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandActiv
     public void RecognizerChangeCallback(final boolean isRecognizerActive) {
         Log.d(LOG_TAG, getMethodName());
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateListeningStatusText(isRecognizerActive);
-            }
-        });
+        runOnUiThread(() -> updateListeningStatusText(isRecognizerActive));
     }
 
     /**

@@ -10,9 +10,6 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 import edu.gatech.w2gplayground.Activities.Interfaces.VoiceCommandActivity;
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
@@ -124,12 +121,7 @@ public class HomeActivity extends AppCompatActivity implements VoiceCommandActiv
      * @param isRecognizerActive boolean - true when listening
      */
     public void RecognizerChangeCallback(final boolean isRecognizerActive) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateListeningStatus(isRecognizerActive);
-            }
-        });
+        runOnUiThread(() -> updateListeningStatus(isRecognizerActive));
     }
 
     /**
