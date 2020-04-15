@@ -4,6 +4,6 @@ import edu.gatech.w2gplayground.Models.Item;
 
 public class ItemGenerator extends Generator {
     public static Item item() {
-        return new Item(randId(), randUpc(), "My Item");
+        return new Item(randId(), randUpc(), "Motorcycle Helmet");
     }
 }

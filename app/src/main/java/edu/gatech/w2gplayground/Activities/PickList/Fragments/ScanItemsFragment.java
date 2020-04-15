@@ -15,14 +15,17 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.vuzix.sdk.barcode.ScanResult2;
 import com.vuzix.sdk.barcode.ScannerFragment;
 import com.vuzix.sdk.barcode.ScanningRect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
 import edu.gatech.w2gplayground.Audio.Beep;
+import edu.gatech.w2gplayground.Models.Line;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
 
@@ -43,11 +46,12 @@ public class ScanItemsFragment extends Fragment {
 
     private int totalScanned = 0;
 
+    String upc = "012345678905";
+
     /*
-     * Declare item variables
+     * Declare line variables
      */
-    private String name = "Barcode", upc = "012345678905";
-    private int quantity = 1;
+    List<Line> lines = new ArrayList<>();
 
     /**
      * Inflate the correct layout upon creation
@@ -76,15 +80,6 @@ public class ScanItemsFragment extends Fragment {
 
         if (this.activity == null) {
             throw new RuntimeException("Activity cannot be null");
-        }
-
-        // Handle passed in arguments
-        Bundle args = getArguments();
-
-        if (args != null) {
-            this.name = args.getString("name", "Barcode");
-            this.upc = args.getString("upc", "001");
-            this.quantity = args.getInt("quantity", 1);
         }
 
         this.resultIcon = view.findViewById(R.id.result_icon);
@@ -192,6 +187,20 @@ public class ScanItemsFragment extends Fragment {
         resultIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_check_solid));
         resultIcon.setVisibility(View.VISIBLE);
 
+        int binNum = totalScanned == 0 ? 1 : 2;
+
+        Bundle args = new Bundle();
+        args.putInt("binNum", binNum);
+
+        BinPlacementFragment binPlacementFragment = new BinPlacementFragment();
+        binPlacementFragment.setArguments(args);
+
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(binPlacementFragmentContainer.getId(), binPlacementFragment)
+                .addToBackStack(null)
+                .commit();
+
         binPlacementFragmentContainer.setVisibility(View.VISIBLE);
 
         totalScanned++;
@@ -201,12 +210,7 @@ public class ScanItemsFragment extends Fragment {
         if (totalScanned == activity.currQuantity) {
             // All done!
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doneScanning();
-                }
-            }, 2000);
+            handler.postDelayed(this::doneScanning, 2000);
         } else {
             // Add listener back after two (2) seconds
             Handler handler = new Handler();

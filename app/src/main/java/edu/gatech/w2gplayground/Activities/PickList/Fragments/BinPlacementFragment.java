@@ -64,8 +64,10 @@ public class BinPlacementFragment extends Fragment {
 
         switch (binNum) {
             case 1:
+                binPlacement.setImageResource(R.drawable.ic_bin_placement_1);
                 break;
             case 2:
+                binPlacement.setImageResource(R.drawable.ic_bin_placement_2);
                 break;
             default:
                 Log.d(LOG_TAG, "No bin number supplied");

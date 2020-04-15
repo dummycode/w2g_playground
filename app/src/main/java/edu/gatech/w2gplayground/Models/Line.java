@@ -1,5 +1,7 @@
 package edu.gatech.w2gplayground.Models;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 public class Line implements Serializable {

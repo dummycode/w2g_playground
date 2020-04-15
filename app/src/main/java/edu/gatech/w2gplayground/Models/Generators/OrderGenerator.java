@@ -16,6 +16,17 @@ public class OrderGenerator extends Generator {
         lines.add(LineGenerator.line());
         lines.add(LineGenerator.line());
 
-        return new Order(lines);
+        return new Order(randId(), lines);
+    }
+
+    public static Order withLines(int count) {
+        List<Line> lines = new LinkedList<>();
+
+        // Add three lines
+        for (int i = 0; i < count; i++) {
+            lines.add(LineGenerator.line());
+        }
+
+        return new Order(randId(), lines);
     }
 }

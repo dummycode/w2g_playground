@@ -23,7 +23,6 @@ import edu.gatech.w2gplayground.Models.Generators.LineGenerator;
 import edu.gatech.w2gplayground.Models.Generators.LocationGenerator;
 import edu.gatech.w2gplayground.Models.Line;
 import edu.gatech.w2gplayground.Models.Location;
-import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Utilities.CustomToast;
@@ -169,7 +168,7 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
                 .addToBackStack(null)
                 .commit();
 
-        instructions.setText(R.string.activity_picklist__next_location_instructions);
+        instructions.setText(String.format(getString(R.string.activity_picklist__next_location_instructions), currLocation.getName()));
         secondaryInstructions.setText(R.string.activity_picklist__next_location_instructions__secondary);
     }
 
@@ -194,7 +193,7 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      */
     public void scanLocationDone() {
         // Set info for current location
-        Line[] currLines = { LineGenerator.line(), LineGenerator.line() };
+        Line[] currLines = { LineGenerator.line(), LineGenerator.withQuantity(2) };
         currQuantity = 0;
         for (Line line: currLines) {
             currQuantity += line.getQuantity();
@@ -224,8 +223,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      * Handler for when item information is done
      */
     public void locationInfoDone() {
-        CustomToast.showTopToast(this, "Location info done");
-
         // Move to scan items
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         getSupportFragmentManager()
@@ -243,8 +240,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
      * Handler for when items have been scanned
      */
     public void scanItemsDone() {
-        CustomToast.showTopToast(this, "Items have been scanned!");
-
         // If done, go to results screen
         if (true) {
             Bundle args = new Bundle();

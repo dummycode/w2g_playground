@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandActiv
         }
 
         // If already logged in, go directly to main activity
-        ApplicationState.currentUser = UserGenerator.user();
+//        ApplicationState.currentUser = UserGenerator.user();
         if (ApplicationState.currentUser != null) {
             Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(myIntent);

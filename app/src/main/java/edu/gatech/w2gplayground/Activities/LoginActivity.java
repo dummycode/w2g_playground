@@ -273,12 +273,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
      * @param isRecognizerActive boolean - true when listening
      */
     public void RecognizerChangeCallback(final boolean isRecognizerActive) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateListeningStatusText(isRecognizerActive);
-            }
-        });
+        runOnUiThread(() -> updateListeningStatusText(isRecognizerActive));
     }
 
     /**

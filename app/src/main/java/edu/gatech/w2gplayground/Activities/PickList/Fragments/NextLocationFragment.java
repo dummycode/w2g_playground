@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -51,15 +52,15 @@ public class NextLocationFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         Bundle args = getArguments();
 
         if (args != null) {
             location = (Location) args.getSerializable("location");
         }
 
-        TextView nextLocationText = view.findViewById(R.id.next_location);
-        nextLocationText.setText(location.getName());
+        ImageView nextLocationImage = view.findViewById(R.id.next_location);
+        nextLocationImage.setImageResource(R.drawable.ic_location);
+
     }
 
     public class KeyBroadcastReceiver extends BroadcastReceiver {

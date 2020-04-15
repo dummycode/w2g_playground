@@ -10,11 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import edu.gatech.w2gplayground.Activities.PickList.PickListActivity;
+import edu.gatech.w2gplayground.Models.Generators.LineGenerator;
+import edu.gatech.w2gplayground.Models.Generators.OrderGenerator;
+import edu.gatech.w2gplayground.Models.Line;
+import edu.gatech.w2gplayground.Models.Order;
 import edu.gatech.w2gplayground.Models.PickList;
 import edu.gatech.w2gplayground.R;
 
@@ -63,6 +68,12 @@ public class SummaryFragment extends Fragment {
 
         title = activity.findViewById(R.id.summary_title);
         title.setText(String.format(getString(R.string.activity_picklist__summary__title), pickList.getId()));
+
+        Order[] orders = { OrderGenerator.withLines(1), OrderGenerator.withLines(2) };
+        OrderItemAdaptor adapter = new OrderItemAdaptor(activity, orders);
+
+        ListView listView = activity.findViewById(R.id.orders);
+        listView.setAdapter(adapter);
 
     }
 

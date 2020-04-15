@@ -49,7 +49,7 @@ public class BinConfigurationFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        ImageView binConfigurationImage = view.findViewById(R.id.next_location);
+        ImageView binConfigurationImage = view.findViewById(R.id.bin_config);
 
         Bundle args = getArguments();
         int orderCount = 0;

@@ -23,7 +23,7 @@
     <string name="activity_picklist__bin_instructions">Configure bins as shown</string>
     <string name="activity_picklist__bin_instructions__secondary">Press or say \"select\" to advance</string>
 
-    <string name="activity_picklist__next_location_instructions">Proceed to location</string>
+    <string name="activity_picklist__next_location_instructions">Proceed to location %s</string>
     <string name="activity_picklist__next_location_instructions__secondary">Press or say \"select\" to advance</string>
 
     <string name="activity_picklist__scan_location_instructions">Scan location (%s)\'s barcode</string>
@@ -43,7 +43,9 @@
     // Pick List summary page
     <string name="activity_picklist__summary__title">Picklist %s completed!</string>
     <string name="activity_picklist__summary__next_steps">Summary of items picked</string>
-    <string name="activity_picklist__summary_instructions__secondary">Press or say \"select\" to return to home screen</string>
+    <string name="activity_picklist__summary__order_id">Order %d</string>
+    <string name="activity_picklist__summary__item_quantity">%d items</string>
+    <string name="activity_picklist__summary_instructions__secondary">Press or say \"select\" to continue picking, or \"logout\" to logout</string>
 
     <string name="grant_camera_permissions">We need camera permissions.</string>
 
