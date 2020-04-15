@@ -26,7 +26,6 @@ import edu.gatech.w2gplayground.R;
 import edu.gatech.w2gplayground.Voice.LoginVoiceCommandReceiver;
 
 import static edu.gatech.w2gplayground.R.layout.activity_login;
-import static edu.gatech.w2gplayground.R.layout.activity_scan_item;
 
 public class LoginActivity extends AppCompatActivity implements Permissions.Listener, VoiceCommandActivity {
 
@@ -34,7 +33,7 @@ public class LoginActivity extends AppCompatActivity implements Permissions.List
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
-    private final String AUTH_KEY = "MY_AUTH_KEY";
+    private final String AUTH_KEY = "991001332141";
     private final User user = UserGenerator.userWithAuthKey(AUTH_KEY);
 
     LoginVoiceCommandReceiver voiceCommandReceiver;

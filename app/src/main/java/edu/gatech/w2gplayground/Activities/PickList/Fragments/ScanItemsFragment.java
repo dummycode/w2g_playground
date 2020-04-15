@@ -238,8 +238,6 @@ public class ScanItemsFragment extends Fragment {
 
         Beep.beep(activity);
 
-        CustomToast.showTopToast(activity, "Wrong item!");
-
         // Add listener back after one (1) second
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

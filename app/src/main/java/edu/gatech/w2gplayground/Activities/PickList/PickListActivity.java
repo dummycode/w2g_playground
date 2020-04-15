@@ -67,8 +67,6 @@ public class PickListActivity extends AppCompatActivity implements VoiceCommandA
             this.pickListId = getIntent().getIntExtra("pickListId", -1);
         }
 
-        CustomToast.showTopToast(this, pickList.getId());
-
         // Not listening
         listeningStatus = findViewById(R.id.listening);
         listeningStatus.setVisibility(View.GONE);

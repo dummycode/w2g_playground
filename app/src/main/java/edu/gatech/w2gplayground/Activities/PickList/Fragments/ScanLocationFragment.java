@@ -208,8 +208,6 @@ public class ScanLocationFragment extends Fragment implements Permissions.Listen
 
         Beep.beep(activity);
 
-        CustomToast.showTopToast(activity, "Wrong location!");
-
         // Add listener back after one (1) second
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
